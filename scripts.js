@@ -12,6 +12,10 @@
 const games = [
   { title:"Report an issue", "html-link":"/help.html", "obg-track-link":"", category:"Utility" },
   { title:"____________________", "html-link":"#", "obg-track-link":"", category:"" },
+  { title:"NEW GAMES", "html-link":"#", "obg-track-link":"", category:"" },
+  { title:"Brick War", "html-link":"game/bwar", "obg-track-link":"", category:"Action" },
+  { title:"Pokemon Mystery Dungeon Red", "html-link":"game/mysred", "obg-track-link":"", category:"" },
+  { title:"____________________", "html-link":"#", "obg-track-link":"", category:"" },
   { title:"Minecraft 1.12.2", "html-link":"game/eagler1122w/", "obg-track-link":"", category:"Action" },
   { title:"Minecraft 1.8.8", "html-link":"game/eagler188w/", "obg-track-link":"", category:"Action" },
   { title:"Minecraft 1.5.2 (Precision Client)", "html-link":"game/eagler152precisionc/", "obg-track-link":"", category:"Action" },
@@ -92,7 +96,7 @@ const games = [
   { title:"Ragdoll Archers", "html-link":"game/ragarch", "obg-track-link":"", category:"Action" },
   { title:"Retro Bowl College", "html-link":"game/rbc", "obg-track-link":"", category:"Arcade" },
   { title:"Steal a Brainrot", "html-link":"game/sab", "obg-track-link":"", category:"Action" },
-  { title:"Undertale Yellow", "html-link":"game/utyellow", "obg-track-link":"", category:"Action" },
+  { title:"Undertale Yellow", "html-link":"game/utyellow", "obg-track-link":"", category:"Action" }
 ];
 
 /* ---- DOM refs ---- */
