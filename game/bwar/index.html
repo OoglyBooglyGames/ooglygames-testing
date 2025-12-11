@@ -1,0 +1,108 @@
+https://maddox05.github.io/gba_emu/launcher.html#mysteryred = Pokemon Mystery Dungeon Red
+https://maddox05.github.io/gba_emu/launcher.html#pokemongreen = Pokemon Leaf Green
+https://maddox05.github.io/gba_emu/launcher.html#pokemonruby = Pokemon Ruby
+https://maddox05.github.io/gba_emu/launcher.html#pokemonsapphire = Pokemon Sapphire
+https://maddox05.github.io/gba_emu/launcher.html#sonic_advance = Sonic Advance
+https://maddox05.github.io/gba_emu/launcher.html#sonic_advance2 = Sonic Advance 2
+https://maddox05.github.io/gba_emu/launcher.html#sonic_advance3 = Sonic Advance 3
+https://maddox05.github.io/gba_emu/launcher.html#sonicbattle = Sonic Battle
+https://maddox05.github.io/gba_emu/launcher.html#supermarioadvance = Super Mario Advance
+https://maddox05.github.io/gba_emu/launcher.html#supermarioadvance2 = Super Mario Advance 2
+https://maddox05.github.io/gba_emu/launcher.html#supermarioadvance3 = Super Mario Advance 3
+https://maddox05.github.io/gba_emu/launcher.html#supermarioadvance4 = Super Mario Advance 4
+https://maddox05.github.io/gba_emu/launcher.html#warioland4 = Wario Land 4
+https://maddox05.github.io/gba_emu/launcher.html#wario_ware = Wario Ware Inc.
+https://maddox05.github.io/gba_emu/launcher.html#zelda_past = The Legend of Zelda: A Link to the Past
+https://maddox05.github.io/gba_emu/launcher.html#zelda_minish = The Legend of Zelda: The Minish Cap
+https://maddox05.github.io/gba_emu/launcher.html#kirbynightmare = Kirby: Nightmare in Dreamland
+https://maddox05.github.io/gba_emu/launcher.html#kirbymirror = Kirby: The Amazing Mirror
+https://maddox05.github.io/gba_emu/launcher.html#fzero_max = F-Zero: Maximum Velocity
+https://maddox05.github.io/gba_emu/launcher.html#fzero_gp = F-Zero: GP Legend
+https://gamesfrog.com/games/nes/super-mario-bros-3/iframe = Super Mario Bros 3
+https://gamesfrog.com/games/nes/super-mario-world/iframe = Super Mario World
+https://gamesfrog.com/games/nes/super-mario-bros-2/iframe = Super Mario Bros 2
+https://gamesfrog.com/games/nes/classic-tetris/iframe = Classic Tetris
+https://gamesfrog.com/games/n64/kirby-64-the-crystal-shards/iframe = Kirby 64: The Crystal Shards
+https://gamesfrog.com/games/snes/kirby-super-star/iframe = Kirby Super Star
+https://gamesfrog.com/games/nes/kirbys-adventure/iframe = Kirby’s Adventure
+https://gamesfrog.com/games/gb/kirbys-dream-land/iframe = Kirby’s Dream Land
+https://gamesfrog.com/games/gb/kirbys-dream-land-2/iframe = Kirby’s Dream Land 2
+https://gamesfrog.com/games/gba/pokemon-x-and-y/iframe = Pokemon X and Y
+https://gamesfrog.com/games/gb/pokemon-yellow/iframe = Pokemon Yellow
+https://gamesfrog.com/games/nds/pokemon-platinum-version/iframe = Pokemon Platinum
+https://gamesfrog.com/games/gba/pokemon-dark-violet/iframe = Pokemon Dark Violet
+https://gamesfrog.com/games/nds/pokemon-black-version/iframe = Pokemon Black (Japan)
+https://gamesfrog.com/games/adventure/big-fish-eat-small-fish-2/iframe = Big Fish Eat Small Fish 2
+https://gamesfrog.com/games/arcade/go-up-dash-geometry-dash-meltdown/iframe = Geometry Dash Meltdown
+https://gamesfrog.com/games/multiplayer/geometry-dash-world-geo-dash/iframe = Geometry Dash WORLD
+https://gamesfrog.com/games/arcade/geometry-dash-subzero-arcade/iframe = Geometry Dash SubZero
+https://gamesfrog.com/games/arcade/geometry-dash-lite/iframe = Geometry Dash Lite
+https://gamesfrog.com/games/shooting/survivorio/iframe = Survivor.io
+https://gamesfrog.com/games/action/brick-war/iframe = Brick War
+https://gamesfrog.com/games/action/crazy-shark/iframe = Crazy Shark
+
+
+ex:
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oogly Boogly Games</title>
+<style>
+  /* Make iframe cover the whole screen */
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: sans-serif;
+  }
+
+  #myIframe {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    border: none;
+    z-index: 1;
+  }
+
+  /* Popup overlay */
+  #popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 25px 40px;
+    border-radius: 12px;
+    text-align: center;
+    z-index: 2;
+    font-size: 18px;
+    animation: fadeOut 0.5s ease 3s forwards; /* auto-hide after 3s */
+  }
+
+  @keyframes fadeOut {
+    to { opacity: 0; visibility: hidden; }
+  }
+</style>
+</head>
+<body>
+
+<iframe id="myIframe" src="https://gamesfrog.com/games/action/brick-war/iframe"></iframe>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-53Q9XR4QZK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-53Q9XR4QZK');
+</script>
+</body>
+</html>
