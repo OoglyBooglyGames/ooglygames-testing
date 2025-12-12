@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Oogly Boogly Games v3.00</title>
+<title>Oogly Boogly Games</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <style>
 /* ==================== RESET & BASE ==================== */
@@ -988,9 +988,15 @@ select:hover, .btn:hover {
     function renderGamesList(gamesToRender) {
       gamesList.innerHTML = '';
       
-      if (gamesToRender.length === 0) {
+      // Filter out dividers first
+      const validGames = gamesToRender.filter(game => 
+        game.title && !game.title.startsWith('___') && game['html-link'] && game['html-link'] !== '#'
+      );
+      
+      if (validGames.length === 0) {
         welcomeCard.style.display = 'none';
         emptyState.style.display = 'block';
+        updateCount(0);
         return;
       }
       
@@ -999,11 +1005,7 @@ select:hover, .btn:hover {
 
       const fragment = document.createDocumentFragment();
       
-      gamesToRender.forEach((game, idx) => {
-        // Skip dividers
-        if (!game.title || game.title.startsWith('___') || game['html-link'] === '#') {
-          return;
-        }
+      validGames.forEach((game, idx) => {
 
         const item = document.createElement('div');
         item.className = 'game-item';
@@ -1054,7 +1056,7 @@ select:hover, .btn:hover {
       });
 
       gamesList.appendChild(fragment);
-      updateCount(gamesToRender.length);
+      updateCount(validGames.length);
     }
 
     /* ==================== GAME ACTIONS ==================== */
@@ -1277,9 +1279,14 @@ select:hover, .btn:hover {
     /* ==================== INITIALIZATION ==================== */
     function init() {
       loadPreferences();
-      renderGamesList(games);
+      applyFilters(); // Use applyFilters to properly render the list
       renderRecent();
-      updateCount(games.length);
+      
+      // Update total game count
+      const totalGames = games.filter(g => 
+        g.title && !g.title.startsWith('___') && g['html-link'] && g['html-link'] !== '#'
+      ).length;
+      statCount.textContent = totalGames;
     }
 
     init();
