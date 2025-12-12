@@ -13,6 +13,8 @@ const games = [
   { title:"Report an issue", "html-link":"/help.html", "obg-track-link":"", category:"Utility" },
   { title:"____________________", "html-link":"#", "obg-track-link":"", category:"" },
   { title:"NEW GAMES", "html-link":"#", "obg-track-link":"", category:"" },
+   { title:"Pokemon Ruby", "html-link":"game/ruby", "obg-track-link":"", category:"Arcade" },
+   { title:"Pokemon Sapphire", "html-link":"game/sapp", "obg-track-link":"", category:"Arcade" },
    { title:"Spiral Roll", "html-link":"game/sroll", "obg-track-link":"", category:"Arcade" },
   { title:"Brick War", "html-link":"game/bwar", "obg-track-link":"", category:"Action" },
   { title:"Pokemon Mystery Dungeon Red", "html-link":"game/mysred", "obg-track-link":"", category:"Arcade" },
