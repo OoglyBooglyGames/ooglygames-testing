@@ -3,93 +3,842 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Oogly Boogly Games</title>
-<link rel="stylesheet" href="styles.css">
+<title>Oogly Boogly Games v3.00</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
+<style>
+/* ==================== RESET & BASE ==================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --accent: #0b6ef6;
+  --accent-rgb: 11, 110, 246;
+  --bg-base: #0a0e1a;
+  --bg-elevated: rgba(20, 25, 40, 0.7);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-tertiary: rgba(255, 255, 255, 0.4);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.light {
+  --bg-base: #f0f4f8;
+  --bg-elevated: rgba(255, 255, 255, 0.7);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --text-primary: rgba(0, 0, 0, 0.95);
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --text-tertiary: rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+body.oled {
+  --bg-base: #000000;
+  --bg-elevated: rgba(10, 10, 10, 0.9);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: var(--transition);
+}
+
+/* ==================== ANIMATED BACKGROUND ==================== */
+.bg-animated {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  animation: float 20s infinite ease-in-out;
+}
+
+.orb:nth-child(1) {
+  width: 400px; height: 400px;
+  background: linear-gradient(135deg, var(--accent), #ff006e);
+  top: -100px; left: -100px;
+  animation-delay: 0s;
+}
+
+.orb:nth-child(2) {
+  width: 500px; height: 500px;
+  background: linear-gradient(135deg, #8338ec, var(--accent));
+  bottom: -150px; right: -150px;
+  animation-delay: -7s;
+}
+
+.orb:nth-child(3) {
+  width: 350px; height: 350px;
+  background: linear-gradient(135deg, #06ffa5, var(--accent));
+  top: 50%; left: 50%;
+  animation-delay: -14s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.1); }
+  66% { transform: translate(-20px, 30px) scale(0.9); }
+}
+
+/* ==================== GLASS COMPONENTS ==================== */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+}
+
+/* ==================== HEADER ==================== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 16px 24px;
+  background: var(--bg-elevated);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-content {
+  max-width: 1800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), #8338ec);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+.logo .mini {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.user-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #06ffa5;
+  box-shadow: 0 0 12px #06ffa5;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  position: relative;
+  min-width: 280px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 16px 10px 40px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15);
+}
+
+select, .btn {
+  padding: 10px 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+select:hover, .btn:hover {
+  background: var(--glass-border);
+  border-color: var(--accent);
+}
+
+.btn-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  padding: 0;
+}
+
+.accent-picker {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  border: 2px solid var(--glass-border);
+  transition: var(--transition);
+}
+
+.accent-picker:hover {
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+/* ==================== MAIN LAYOUT ==================== */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 24px;
+  min-height: calc(100vh - 180px);
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .grid-layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    order: 2;
+  }
+  .main-content {
+    order: 1;
+  }
+}
+
+/* ==================== SIDEBAR ==================== */
+.sidebar {
+  position: sticky;
+  top: 100px;
+  max-height: calc(100vh - 140px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 16px;
+}
+
+.sidebar-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.sidebar-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.games-container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.games-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px;
+}
+
+.games-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.games-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.games-list::-webkit-scrollbar-thumb {
+  background: var(--glass-border);
+  border-radius: 4px;
+}
+
+.games-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+.game-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  background: var(--glass-bg);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.game-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.1), transparent);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.game-item:hover {
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+
+.game-item:hover::before {
+  opacity: 1;
+}
+
+.game-item:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15);
+}
+
+.game-info {
+  flex: 1;
+}
+
+.game-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.game-category {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.game-chevron {
+  color: var(--text-tertiary);
+  font-size: 12px;
+  transition: var(--transition);
+}
+
+.game-item:hover .game-chevron {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+/* ==================== MAIN CONTENT ==================== */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.welcome-card {
+  padding: 40px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), #8338ec, #ff006e);
+}
+
+.welcome-title {
+  font-size: 42px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--accent), #8338ec);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.version-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: rgba(var(--accent-rgb), 0.15);
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 24px;
+}
+
+.update-section {
+  margin: 24px 0;
+  padding: 20px;
+  background: rgba(var(--accent-rgb), 0.05);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+}
+
+.update-section h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.update-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.update-section li {
+  padding: 6px 0;
+  padding-left: 24px;
+  position: relative;
+}
+
+.update-section li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.domains-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.domain-link {
+  padding: 10px 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.domain-link:hover {
+  background: rgba(var(--accent-rgb), 0.1);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.stat-card {
+  padding: 24px;
+  background: rgba(var(--accent-rgb), 0.05);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.recent-plays {
+  padding: 32px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+.recent-header {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.recent-item {
+  padding: 14px 18px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.recent-item:hover {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+  transform: translateY(-2px);
+}
+
+.empty-state {
+  padding: 60px 40px;
+  text-align: center;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.empty-state h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+}
+
+/* ==================== FOOTER ==================== */
+.footer {
+  padding: 24px;
+  margin-top: 60px;
+  text-align: center;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--glass-border);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.footer-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.footer-link:hover {
+  color: var(--accent);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .header-controls {
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  .search-box {
+    min-width: 100%;
+  }
+  
+  .welcome-card {
+    padding: 24px;
+  }
+  
+  .welcome-title {
+    font-size: 28px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="left">
+  <div class="bg-animated">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
+
+  <header class="header">
+    <div class="header-content">
       <div class="logo">Oogly Boogly <span class="mini">Games</span></div>
-      <button id="open-altdom" class="ghost">Alternative Domains</button>
-    </div>
+      
+      <div class="user-badge">
+        <span class="user-indicator"></span>
+        <span id="activeUsers">0</span>
+        <span>online</span>
+      </div>
 
-    <div class="controls">
-      <input id="search" class="search" type="search" placeholder="Search games (press /)" aria-label="Search games" />
-      <select id="categoryFilter" aria-label="Filter by category">
-        <option value="all">All Categories</option>
-        <option value="Action">Action</option>
-        <option value="Puzzle">Puzzle</option>
-        <option value="Arcade">Arcade</option>
-        <option value="Idle">Idle</option>
-        <option value="Utility">Utility</option>
-      </select>
+      <div class="header-controls">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            id="search" 
+            class="search-input" 
+            type="search" 
+            placeholder="Search games (press /)" 
+            aria-label="Search games"
+          />
+        </div>
+        
+        <select id="categoryFilter" aria-label="Filter by category">
+          <option value="all">All Categories</option>
+          <option value="Action">Action</option>
+          <option value="Puzzle">Puzzle</option>
+          <option value="Arcade">Arcade</option>
+          <option value="Idle">Idle</option>
+          <option value="Utility">Utility</option>
+        </select>
 
-      <div class="theme-controls">
-        <label class="small">Mode</label>
         <select id="modeSelect" aria-label="Theme mode">
           <option value="dark">Dark</option>
           <option value="light">Light</option>
           <option value="oled">OLED</option>
         </select>
-      </div>
 
-      <div class="accent">
-        <label class="small">Accent</label>
-        <input id="accentPicker" type="color" value="#0b6ef6" title="Pick accent color">
-      </div>
+        <input 
+          id="accentPicker" 
+          class="accent-picker" 
+          type="color" 
+          value="#0b6ef6" 
+          title="Accent color"
+        />
 
-      <button id="toggleDark" class="iconbtn" aria-label="Toggle theme">🌓</button>
+        <button id="toggleDark" class="btn btn-icon" aria-label="Toggle theme">🌓</button>
+      </div>
     </div>
   </header>
 
-  <main class="shell" id="shell">
-    <aside id="sidebar" class="sidebar" aria-label="Game list">
-      <div class="sidebar-header">
-        <h2>All Games</h2>
-        <div class="subtitle" id="count">0 games</div>
-      </div>
-      <div id="list" class="list" role="list"></div>
-    </aside>
+  <div class="container">
+    <div class="grid-layout">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-title">All Games</div>
+          <div class="sidebar-subtitle" id="count">0 games</div>
+        </div>
+        <div class="games-container">
+          <div id="gamesList" class="games-list"></div>
+        </div>
+      </aside>
 
-    <section class="content" id="content">
-      <div id="welcome" class="welcome glass-card">
-        <h1>Welcome to Oogly Boogly Games</h1>
-        <h1>v2.91 (Dec 12, 2025)</h1>
-        <p><strong>Check out one of the 30 new games added!</strong></p>
-        <h2>Oogly Boogly Games Update v2.91.<br>* Added 27 new games <br>* Fixed some issues</h2>
-       <p><strong>Other ways to access the site: <br> https://ooglygames.netlify.app <br>
-       https://oogly.chickennet.work</strong></p>
+      <main class="main-content">
+        <div id="welcome" class="welcome-card">
+          <h1 class="welcome-title">Welcome to Oogly Boogly Games</h1>
+          <div class="version-badge">v3.00 (Dec 12, 2025)</div>
+          
+          <div class="update-section">
+            <h3>🎮 Latest Updates</h3>
+            <ul>
+              <li>Complete v3.00 redesign with modern glassmorphic UI</li>
+              <li>Added real-time active user counter</li>
+              <li>Performance optimized for 100+ games</li>
+              <li>Enhanced keyboard navigation</li>
+              <li>New animated backgrounds and hover effects</li>
+            </ul>
+          </div>
 
-                      <div class="meta-row">
-          <div class="stat"><strong id="stat-count">0</strong><span>games</span></div>
-              </div>
-        
-      </div>
+          <h3 style="margin-top: 24px; margin-bottom: 12px;">Alternative Domains:</h3>
+          <div class="domains-list">
+            <a href="https://ooglygames.netlify.app" class="domain-link" target="_blank">ooglygames.netlify.app</a>
+            <a href="https://oogly.chickennet.work" class="domain-link" target="_blank">oogly.chickennet.work</a>
+          </div>
 
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="stat-value" id="statCount">0</span>
+              <span class="stat-label">Total Games</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value" id="statUsers">0</span>
+              <span class="stat-label">Active Users</span>
+            </div>
+          </div>
+        </div>
 
-      <div id="empty" class="empty glass-card" hidden>
-        <h2>No matches</h2>
-        <p>Try a different search or category.</p>
-      </div>
-    </section>
-  </main>
+        <div id="recentSection" class="recent-plays" style="display: none;">
+          <h2 class="recent-header">Recently Played</h2>
+          <div id="recentGrid" class="recent-grid"></div>
+        </div>
 
-  <footer class="foot glass-card">
-    <small>© 2025 Oogly Boogly Games - v2.91</small>
-    <a href="/support.html" class="ghost">Alternative Domains page</a>
+        <div id="empty" class="empty-state" style="display: none;">
+          <div class="empty-icon">🎮</div>
+          <h2>No matches found</h2>
+          <p>Try a different search term or category.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div>© 2025 Oogly Boogly Games - v3.00</div>
+    <div class="footer-links">
+      <a href="/support.html" class="footer-link">Alternative Domains</a>
+      <a href="/help.html" class="footer-link">Report an Issue</a>
+    </div>
   </footer>
 
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-53Q9XR4QZK"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-53Q9XR4QZK');
-</script>
-
-<script src="scripts.js" defer></script>
-</body>
-</html>
+  <script>
+    /* ==================== GAME DATA ==================== */
+    const games = [
+      { title:"Report an issue", "html-link":"/help.html", category:"Utility" },
+      { title:"Pokemon Ruby", "html-link":"game/ruby2", category:"Arcade" },
+      { title:"Pokemon Sapphire", "html-link":"game/sapp", category:"Arcade" },
+      { title:"Spiral Roll", "html-link":"game/sroll", category:"Arcade" },
+      { title:"Brick War", "html-link":"game/bwar", category:"Action" },
+      { title:"Pokemon Mystery Dungeon Red", "html-link":"game/mysred", category:"Arcade" },
+      { title:"Pokemon Leaf Green", "html-link":"game/pgreen", category:"Arcade" },
+      { title:"Sonic Advance", "html-link":"game/sonicadv", category:"Arcade" },
+      { title:"Sonic Advance 2", "html-link":"game/sonicadv2", category:"Arcade" },
+      { title:"Sonic Advance 3", "html-link":"game/sonicadv3", category:"Arcade" },
+      { title:"Sonic Battle", "html-link":"game/sbattle", category:"Action" },
+      { title:"Super Mario Advance", "html-link":"game/marioadv", category:"Arcade" },
+      { title:"Super Mario Advance 2", "html-link":"game/marioadv2", category:"Arcade" },
+      { title:"Super Mario Advance 3", "html-link":"game/marioadv3", category:"Arcade" },
+      { title:"Super Mario Advance 4", "html-link":"game/marioadv4", category:"Arcade" },
+      { title:"Wario Land 4", "html-link":"game/wl4", category:"Arcade" },
+      { title:"Wario Ware Inc.", "html-link":"game/ww", category:"Arcade" },
+      { title:"The Legend of Zelda: A Link to the Past", "html-link":"game/zpt", category:"Action" },
+      { title:"The Legend of Zelda: The Minish Cap", "html-link":"game/zmh", category:"Action" },
+      { title:"Kirby: Nightmare in Dreamland", "html-link":"game/knd", category:"Action" },
+      { title:"Kirby: The Amazing Mirror", "html-link":"game/tam", category:"Action" },
+      { title:"F-Zero: Maximum Velocity", "html-link":"game/fzm", category:"Action" },
+      { title:"F-Zero: GP Legend", "html-link":"game/fzg", category:"Action" },
+      { title:"Minecraft 1.12.2", "html-link":"game/eagler1122w/", category:"Action" },
+      { title:"Minecraft 1.8.8", "html-link":"game/eagler188w/", category:"Action" },
+      { title:"Minecraft 1.5.2 (Precision Client)", "html-link":"game/eagler152precisionc/", category:"Action" },
+      { title:"Click Test", "html-link":"game/clicks", category:"Action" },
+      { title:"Minecraft 1.5.2", "html-link":"game/eagler152/", category:"Action" },
+      { title:"Minecraft Classic", "html-link":"game/mcclassic/", category:"Action" },
+      { title:"Snow Rider 3D", "html-link":"game/snowrider/", category:"Arcade" },
+      { title:"Asteroids", "html-link":"game/asteroids/", category:"Arcade" },
+      { title:"Dino", "html-link":"game/dino/", category:"Arcade" },
+      { title:"DinoGame++", "html-link":"game/dinoplusplus/", category:"Arcade" },
+      { title:"2048", "html-link":"game/2048/", category:"Puzzle" },
+      { title:"ASCII Space", "html-link":"game/asciispace", category:"Action" },
+      { title:"Henry Stickman: Breaking the Bank", "html-link":"game/btb", category:"Arcade" },
+      { title:"Henry Stickman: Escaping the Prison", "html-link":"game/etp", category:"Arcade" },
+      { title:"Henry Stickman: Crossing the Pit", "html-link":"game/fctp", category:"Arcade" },
+      { title:"Henry Stickman: Fleeing the Complex", "html-link":"game/ftc", category:"Arcade" },
+      { title:"Henry Stickman: Infiltrating the Airship", "html-link":"game/ita", category:"Arcade" },
+      { title:"Henry Stickman: Stealing the Diamond", "html-link":"game/stealingthediamond", category:"Arcade" },
+      { title:"Cookie Clicker", "html-link":"game/index.html", category:"Idle" },
+      { title:"Drift Boss", "html-link":"game/driftboss", category:"Arcade" },
+      { title:"Snake.io
