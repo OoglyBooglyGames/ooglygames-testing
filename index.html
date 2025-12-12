@@ -796,368 +796,490 @@ select:hover, .btn:hover {
   </footer>
 
   <script>
-/* Oogly Boogly — Glass UI v2
-   Features:
-   - glassmorphism theme + modes (dark/light/oled)
-   - accent color picker (persisted)
-   - search, category filter, debounced
-   - recent plays in localStorage
-   - keyboard nav (/ to search, arrows in list)
-   - Alternative Domains modal -> separate page available
-*/
+    /* ==================== GAME DATA ==================== */
+    const games = [
+      { title:"Report an issue", "html-link":"/help.html", category:"Utility" },
+      { title:"Pokemon Ruby", "html-link":"game/ruby2", category:"Arcade" },
+      { title:"Pokemon Sapphire", "html-link":"game/sapp", category:"Arcade" },
+      { title:"Spiral Roll", "html-link":"game/sroll", category:"Arcade" },
+      { title:"Brick War", "html-link":"game/bwar", category:"Action" },
+      { title:"Pokemon Mystery Dungeon Red", "html-link":"game/mysred", category:"Arcade" },
+      { title:"Pokemon Leaf Green", "html-link":"game/pgreen", category:"Arcade" },
+      { title:"Sonic Advance", "html-link":"game/sonicadv", category:"Arcade" },
+      { title:"Sonic Advance 2", "html-link":"game/sonicadv2", category:"Arcade" },
+      { title:"Sonic Advance 3", "html-link":"game/sonicadv3", category:"Arcade" },
+      { title:"Sonic Battle", "html-link":"game/sbattle", category:"Action" },
+      { title:"Super Mario Advance", "html-link":"game/marioadv", category:"Arcade" },
+      { title:"Super Mario Advance 2", "html-link":"game/marioadv2", category:"Arcade" },
+      { title:"Super Mario Advance 3", "html-link":"game/marioadv3", category:"Arcade" },
+      { title:"Super Mario Advance 4", "html-link":"game/marioadv4", category:"Arcade" },
+      { title:"Wario Land 4", "html-link":"game/wl4", category:"Arcade" },
+      { title:"Wario Ware Inc.", "html-link":"game/ww", category:"Arcade" },
+      { title:"The Legend of Zelda: A Link to the Past", "html-link":"game/zpt", category:"Action" },
+      { title:"The Legend of Zelda: The Minish Cap", "html-link":"game/zmh", category:"Action" },
+      { title:"Kirby: Nightmare in Dreamland", "html-link":"game/knd", category:"Action" },
+      { title:"Kirby: The Amazing Mirror", "html-link":"game/tam", category:"Action" },
+      { title:"F-Zero: Maximum Velocity", "html-link":"game/fzm", category:"Action" },
+      { title:"F-Zero: GP Legend", "html-link":"game/fzg", category:"Action" },
+      { title:"Minecraft 1.12.2", "html-link":"game/eagler1122w/", category:"Action" },
+      { title:"Minecraft 1.8.8", "html-link":"game/eagler188w/", category:"Action" },
+      { title:"Minecraft 1.5.2 (Precision Client)", "html-link":"game/eagler152precisionc/", category:"Action" },
+      { title:"Click Test", "html-link":"game/clicks", category:"Action" },
+      { title:"Minecraft 1.5.2", "html-link":"game/eagler152/", category:"Action" },
+      { title:"Minecraft Classic", "html-link":"game/mcclassic/", category:"Action" },
+      { title:"Snow Rider 3D", "html-link":"game/snowrider/", category:"Arcade" },
+      { title:"Asteroids", "html-link":"game/asteroids/", category:"Arcade" },
+      { title:"Dino", "html-link":"game/dino/", category:"Arcade" },
+      { title:"DinoGame++", "html-link":"game/dinoplusplus/", category:"Arcade" },
+      { title:"2048", "html-link":"game/2048/", category:"Puzzle" },
+      { title:"ASCII Space", "html-link":"game/asciispace", category:"Action" },
+      { title:"Henry Stickman: Breaking the Bank", "html-link":"game/btb", category:"Arcade" },
+      { title:"Henry Stickman: Escaping the Prison", "html-link":"game/etp", category:"Arcade" },
+      { title:"Henry Stickman: Crossing the Pit", "html-link":"game/fctp", category:"Arcade" },
+      { title:"Henry Stickman: Fleeing the Complex", "html-link":"game/ftc", category:"Arcade" },
+      { title:"Henry Stickman: Infiltrating the Airship", "html-link":"game/ita", category:"Arcade" },
+      { title:"Henry Stickman: Stealing the Diamond", "html-link":"game/stealingthediamond", category:"Arcade" },
+      { title:"Cookie Clicker", "html-link":"game/index.html", category:"Idle" },
+      { title:"Drift Boss", "html-link":"game/driftboss", category:"Arcade" },
+      { title:"Snake.io", "html-link":"game/snakeio", category:"Arcade" },
+      { title:"Drift Hunters", "html-link":"game/drifthunters", category:"Arcade" },
+      { title:"Race Survival Arena King", "html-link":"/rsak", category:"Action" },
+      { title:"Deadly Descent", "html-link":"/dd", category:"Action" },
+      { title:"ArrowMaster.io", "html-link":"/am", category:"Action" },
+      { title:"Bit Planes", "html-link":"game/bitp", category:"Action" },
+      { title:"Bloons TD", "html-link":"game/btd", category:"Puzzle" },
+      { title:"Bloons TD 2", "html-link":"game/btd2", category:"Puzzle" },
+      { title:"Bloons TD 3", "html-link":"game/btd3", category:"Puzzle" },
+      { title:"Bloons TD 5", "html-link":"game/btd5", category:"Puzzle" },
+      { title:"Capybara Clicker", "html-link":"game/capyclicker", category:"Idle" },
+      { title:"Deltarune", "html-link":"game/deltar", category:"Action" },
+      { title:"Doom", "html-link":"game/doom", category:"Action" },
+      { title:"Aircraft Fighter Pilot", "html-link":"game/fighterpilot", category:"Action" },
+      { title:"Flappy Bird", "html-link":"game/flapb", category:"Arcade" },
+      { title:"Geometry Freezenova", "html-link":"game/gdfreezen", category:"Action" },
+      { title:"Infinite Craft", "html-link":"game/infcraft", category:"Puzzle" },
+      { title:"Jetpack Joyride", "html-link":"game/jpjyr", category:"Action" },
+      { title:"Mini Golf", "html-link":"game/minig", category:"Arcade" },
+      { title:"OvO", "html-link":"game/ovo", category:"Arcade" },
+      { title:"OvO 2", "html-link":"game/ovo2", category:"Arcade" },
+      { title:"OvO Dimensions", "html-link":"game/ovod", category:"Arcade" },
+      { title:"Pokemon Emerald", "html-link":"game/pokeem", category:"Action" },
+      { title:"Pokemon Red", "html-link":"game/pokemonr", category:"Action" },
+      { title:"Plants vs Zombies", "html-link":"game/pvz", category:"Action" },
+      { title:"Super Mario 64", "html-link":"game/sm64", category:"Arcade" },
+      { title:"Subway Surfers", "html-link":"game/subsurf", category:"Action" },
+      { title:"Super Mario Bros", "html-link":"game/supermariobros", category:"Action" },
+      { title:"Temple Run 2", "html-link":"game/tr2", category:"Arcade" },
+      { title:"Undertale", "html-link":"game/underta", category:"Action" },
+      { title:"Vex 8", "html-link":"game/vx8", category:"Action" },
+      { title:"Animal Crossing", "html-link":"game/animalc", category:"Action" },
+      { title:"Baldi's Basics", "html-link":"game/bb", category:"Action" },
+      { title:"Duck Life 2", "html-link":"game/dl2", category:"Action" },
+      { title:"Duck Life 3", "html-link":"game/dl3", category:"Action" },
+      { title:"Duck Life 4", "html-link":"game/dl4", category:"Action" },
+      { title:"Doge Miner", "html-link":"game/dm", category:"Idle" },
+      { title:"FNAF 1", "html-link":"game/fnaf1", category:"Action" },
+      { title:"FNAF 2", "html-link":"game/fnaf2", category:"Action" },
+      { title:"FNAF 3", "html-link":"game/fnaf3", category:"Action" },
+      { title:"FNAF 4", "html-link":"game/fnaf4", category:"Action" },
+      { title:"FNAF: Sister Location", "html-link":"game/fnaf5", category:"Action" },
+      { title:"FNAF Pizzeria Simulator", "html-link":"game/fnafps", category:"Action" },
+      { title:"Hollow Knight", "html-link":"game/hlkn", category:"Action" },
+      { title:"Portal", "html-link":"game/portal", category:"Action" },
+      { title:"Uno", "html-link":"game/uno", category:"Arcade" },
+      { title:"99 Nights in The Forest", "html-link":"game/99nitf", category:"Action" },
+      { title:"Blocky Puzzle", "html-link":"game/blockypuzzle", category:"Puzzle" },
+      { title:"Bridge Race", "html-link":"game/brace", category:"Action" },
+      { title:"CrazyCattle3D", "html-link":"game/cc3d", category:"Action" },
+      { title:"Clash Royale", "html-link":"game/clro", category:"Action" },
+      { title:"Grow a Garden", "html-link":"game/gag", category:"Action" },
+      { title:"Granny", "html-link":"game/grny", category:"Action" },
+      { title:"Growden.io", "html-link":"game/growio", category:"Action" },
+      { title:"Helix Jump", "html-link":"game/hjump", category:"Action" },
+      { title:"Idle Ants", "html-link":"game/idants", category:"Action" },
+      { title:"Obby But You're On A Bike", "html-link":"game/obyoab", category:"Action" },
+      { title:"Ragdoll Archers", "html-link":"game/ragarch", category:"Action" },
+      { title:"Retro Bowl College", "html-link":"game/rbc", category:"Arcade" },
+      { title:"Steal a Brainrot", "html-link":"game/sab", category:"Action" },
+      { title:"Undertale Yellow", "html-link":"game/utyellow", category:"Action" }
+    ];
 
-/* -------- games list (no thumbnails) -------- */
-const games = [
-  { title:"Report an issue", "html-link":"/help.html", "obg-track-link":"", category:"Utility" },
-  { title:"____________________", "html-link":"#", "obg-track-link":"", category:"" },
-  { title:"NEW GAMES", "html-link":"#", "obg-track-link":"", category:"" },
-{ title:"Pokemon Ruby", "html-link":"game/ruby2", "obg-track-link":"", category:"Arcade" },
-   { title:"Pokemon Sapphire", "html-link":"game/sapp", "obg-track-link":"", category:"Arcade" },
-   { title:"Spiral Roll", "html-link":"game/sroll", "obg-track-link":"", category:"Arcade" },
-  { title:"Brick War", "html-link":"game/bwar", "obg-track-link":"", category:"Action" },
-  { title:"Pokemon Mystery Dungeon Red", "html-link":"game/mysred", "obg-track-link":"", category:"Arcade" },
-  { title:"Pokemon Leaf Green", "html-link":"game/pgreen", "obg-track-link":"", category:"Arcade" },
-     { title:"Sonic Advance", "html-link":"game/sonicadv", "obg-track-link":"", category:"Arcade" },
-     { title:"Sonic Advance 2", "html-link":"game/sonicadv2", "obg-track-link":"", category:"Arcade" },
-     { title:"Sonic Advance 3", "html-link":"game/sonicadv3", "obg-track-link":"", category:"Arcade" },
-     { title:"Sonic Battle", "html-link":"game/sbattle", "obg-track-link":"", category:"Action" },
-     { title:"Super Mario Advance", "html-link":"game/marioadv", "obg-track-link":"Arcade", category:"" },
-     { title:"Super Mario Advance 2", "html-link":"game/marioadv2", "obg-track-link":"Arcade", category:"" },
-     { title:"Super Mario Advance 3", "html-link":"game/marioadv3", "obg-track-link":"Arcade", category:"" },
-     { title:"Super Mario Advance 4", "html-link":"game/marioadv4", "obg-track-link":"Arcade", category:"" },
-     { title:"Wario Land 4", "html-link":"game/wl4", "obg-track-link":"", category:"Arcade" },
-     { title:"Wario Ware Inc.", "html-link":"game/ww", "obg-track-link":"", category:"Arcade" },
-     { title:"The Legend of Zelda: A Link to the Past", "html-link":"game/zpt", "obg-track-link":"", category:"Action" },
-     { title:"The Legend of Zelda: The Minish Cap", "html-link":"game/zmh", "obg-track-link":"", category:"Action" },
-     { title:"Kirby: Nightmare in Dreamland", "html-link":"game/knd", "obg-track-link":"", category:"Action" },
-     { title:"Kirby: The Amazing Mirror", "html-link":"game/tam", "obg-track-link":"", category:"Action" },
-     { title:"F-Zero: Maximum Velocity", "html-link":"game/fzm", "obg-track-link":"", category:"Action" },
-     { title:"F-Zero: GP Legend", "html-link":"game/fzg", "obg-track-link":"", category:"Action" },
-  
-  { title:"____________________", "html-link":"#", "obg-track-link":"", category:"" },
-  { title:"Minecraft 1.12.2", "html-link":"game/eagler1122w/", "obg-track-link":"", category:"Action" },
-  { title:"Minecraft 1.8.8", "html-link":"game/eagler188w/", "obg-track-link":"", category:"Action" },
-  { title:"Minecraft 1.5.2 (Precision Client)", "html-link":"game/eagler152precisionc/", "obg-track-link":"", category:"Action" },
-   { title:"Click Test", "html-link":"game/clicks", category:"Action" },
-  { title:"Minecraft 1.5.2", "html-link":"game/eagler152/", "obg-track-link":"", category:"Action" },
-  { title:"Minecraft Classic", "html-link":"game/mcclassic/", "obg-track-link":"", category:"Action" },
-  { title:"Snow Rider 3D", "html-link":"game/snowrider/", "obg-track-link":"", category:"Arcade" },
-  { title:"Asteroids", "html-link":"game/asteroids/", "obg-track-link":"", category:"Arcade" },
-  { title:"Dino", "html-link":"game/dino/", "obg-track-link":"", category:"Arcade" },
-  { title:"DinoGame++", "html-link":"game/dinoplusplus/", "obg-track-link":"", category:"Arcade" },
-  { title:"2048", "html-link":"game/2048/", "obg-track-link":"", category:"Puzzle" },
-  { title:"ASCII Space", "html-link":"game/asciispace", "obg-track-link":"", category:"Action" },
-  { title:"Henry Stickman: Breaking the Bank", "html-link":"game/btb", "obg-track-link":"", category:"Arcade" },
-  { title:"Henry Stickman: Escaping the Prison", "html-link":"game/etp", "obg-track-link":"", category:"Arcade" },
-  { title:"Henry Stickman: Crossing the Pit", "html-link":"game/fctp", "obg-track-link":"", category:"Arcade" },
-  { title:"Henry Stickman: Fleeing the Complex", "html-link":"game/ftc", "obg-track-link":"", category:"Arcade" },
-  { title:"Henry Stickman: Infiltrating the Airship", "html-link":"game/ita", "obg-track-link":"", category:"Arcade" },
-  { title:"Henry Stickman: Stealing the Diamond", "html-link":"game/stealingthediamond", "obg-track-link":"", category:"Arcade" },
-  { title:"Cookie Clicker", "html-link":"game/index.html", "obg-track-link":"", category:"Idle" },
-  { title:"Drift Boss", "html-link":"game/driftboss", "obg-track-link":"", category:"Arcade" },
-  { title:"Snake.io", "html-link":"game/snakeio", "obg-track-link":"", category:"Arcade" },
-  { title:"Drift Hunters", "html-link":"game/drifthunters", "obg-track-link":"", category:"Arcade" },
-  { title:"Race Survival Arena King", "html-link":"/rsak", "obg-track-link":"", category:"Action" },
-  { title:"Deadly Descent", "html-link":"/dd", "obg-track-link":"", category:"Action" },
-  { title:"ArrowMaster.io", "html-link":"/am", "obg-track-link":"", category:"Action" },
-  { title:"Bit Planes", "html-link":"game/bitp", "obg-track-link":"", category:"Action" },
-  { title:"Bloons TD", "html-link":"game/btd", "obg-track-link":"", category:"Puzzle" },
-  { title:"Bloons TD 2", "html-link":"game/btd2", "obg-track-link":"", category:"Puzzle" },
-  { title:"Bloons TD 3", "html-link":"game/btd3", "obg-track-link":"", category:"Puzzle" },
-  { title:"Bloons TD 5", "html-link":"game/btd5", "obg-track-link":"", category:"Puzzle" },
-  { title:"Capybara Clicker", "html-link":"game/capyclicker", "obg-track-link":"", category:"Idle" },
-  { title:"Deltarune", "html-link":"game/deltar", "obg-track-link":"", category:"Action" },
-  { title:"Doom", "html-link":"game/doom", "obg-track-link":"", category:"Action" },
-  { title:"Aircraft Fighter Pilot", "html-link":"game/fighterpilot", "obg-track-link":"", category:"Action" },
-  { title:"Flappy Bird", "html-link":"game/flapb", "obg-track-link":"", category:"Arcade" },
-  { title:"Geometry Freezenova", "html-link":"game/gdfreezen", "obg-track-link":"", category:"Action" },
-  { title:"Infinite Craft", "html-link":"game/infcraft", "obg-track-link":"", category:"Puzzle" },
-  { title:"Jetpack Joyride", "html-link":"game/jpjyr", "obg-track-link":"", category:"Action" },
-  { title:"Mini Golf", "html-link":"game/minig", "obg-track-link":"", category:"Arcade" },
-  { title:"OvO", "html-link":"game/ovo", "obg-track-link":"", category:"Arcade" },
-  { title:"OvO 2", "html-link":"game/ovo2", "obg-track-link":"", category:"Arcade" },
-  { title:"OvO Dimensions", "html-link":"game/ovod", "obg-track-link":"", category:"Arcade" },
-  { title:"Pokemon Emerald", "html-link":"game/pokeem", "obg-track-link":"", category:"Action" },
-  { title:"Pokemon Red", "html-link":"game/pokemonr", "obg-track-link":"", category:"Action" },
-  { title:"Plants vs Zombies", "html-link":"game/pvz", "obg-track-link":"", category:"Action" },
-  { title:"Super Mario 64", "html-link":"game/sm64", "obg-track-link":"", category:"Arcade" },
-  { title:"Subway Surfers", "html-link":"game/subsurf", "obg-track-link":"", category:"Action" },
-  { title:"Super Mario Bros", "html-link":"game/supermariobros", "obg-track-link":"", category:"Action" },
-  { title:"Temple Run 2", "html-link":"game/tr2", "obg-track-link":"", category:"Arcade" },
-  { title:"Undertale", "html-link":"game/underta", "obg-track-link":"", category:"Action" },
-  { title:"Vex 8", "html-link":"game/vx8", "obg-track-link":"", category:"Action" },
-  { title:"Animal Crossing", "html-link":"game/animalc", "obg-track-link":"", category:"Action" },
-  { title:"Baldi's Basics", "html-link":"game/bb", "obg-track-link":"", category:"Action" },
-  { title:"Duck Life 2", "html-link":"game/dl2", "obg-track-link":"", category:"Action" },
-  { title:"Duck Life 3", "html-link":"game/dl3", "obg-track-link":"", category:"Action" },
-  { title:"Duck Life 4", "html-link":"game/dl4", "obg-track-link":"", category:"Action" },
-  { title:"Doge Miner", "html-link":"game/dm", "obg-track-link":"", category:"Idle" },
-  { title:"FNAF 1", "html-link":"game/fnaf1", "obg-track-link":"", category:"Action" },
-  { title:"FNAF 2", "html-link":"game/fnaf2", "obg-track-link":"", category:"Action" },
-  { title:"FNAF 3", "html-link":"game/fnaf3", "obg-track-link":"", category:"Action" },
-  { title:"FNAF 4", "html-link":"game/vx8", "obg-track-link":"", category:"Action" },
-  { title:"FNAF: Sister Location", "html-link":"game/fnaf5", "obg-track-link":"", category:"Action" },
-  { title:"FNAF Pizzeria Simulator", "html-link":"game/fnafps", "obg-track-link":"", category:"Action" },
-  { title:"Hollow Knight", "html-link":"game/hlkn", "obg-track-link":"", category:"Action" },
-  { title:"Portal", "html-link":"game/portal", "obg-track-link":"", category:"Action" },
-  { title:"Uno", "html-link":"game/uno", "obg-track-link":"", category:"Arcade" },
-  { title:"99 Nights in The Forest", "html-link":"game/99nitf", "obg-track-link":"", category:"Action" },
-  { title:"Blocky Puzzle", "html-link":"game/blockypuzzle", "obg-track-link":"", category:"Puzzle" },
-  { title:"Bridge Race", "html-link":"game/brace", "obg-track-link":"", category:"Action" },
-  { title:"CrazyCattle3D", "html-link":"game/cc3d", "obg-track-link":"", category:"Action" },
-  { title:"Clash Royale", "html-link":"game/clro", "obg-track-link":"", category:"Action" },
-  { title:"Grow a Garden", "html-link":"game/gag", "obg-track-link":"", category:"Action" },
-  { title:"Granny", "html-link":"game/grny", "obg-track-link":"", category:"Action" },
-  { title:"Growden.io", "html-link":"game/growio", "obg-track-link":"", category:"Action" },
-  { title:"Helix Jump", "html-link":"game/hjump", "obg-track-link":"", category:"Action" },
-  { title:"Idle Ants", "html-link":"game/idants", "obg-track-link":"", category:"Action" },
-  { title:"Obby But You're On A Bike", "html-link":"game/obyoab", "obg-track-link":"", category:"Action" },
-  { title:"Ragdoll Archers", "html-link":"game/ragarch", "obg-track-link":"", category:"Action" },
-  { title:"Retro Bowl College", "html-link":"game/rbc", "obg-track-link":"", category:"Arcade" },
-  { title:"Steal a Brainrot", "html-link":"game/sab", "obg-track-link":"", category:"Action" },
-  { title:"Undertale Yellow", "html-link":"game/utyellow", "obg-track-link":"", category:"Action" }
-];
+    /* ==================== DOM ELEMENTS ==================== */
+    const $ = (s) => document.querySelector(s);
+    const gamesList = $('#gamesList');
+    const searchInput = $('#search');
+    const categoryFilter = $('#categoryFilter');
+    const countDisplay = $('#count');
+    const modeSelect = $('#modeSelect');
+    const accentPicker = $('#accentPicker');
+    const toggleDarkBtn = $('#toggleDark');
+    const activeUsersDisplay = $('#activeUsers');
+    const statCount = $('#statCount');
+    const statUsers = $('#statUsers');
+    const welcomeCard = $('#welcome');
+    const emptyState = $('#empty');
+    const recentSection = $('#recentSection');
+    const recentGrid = $('#recentGrid');
 
-/* ---- DOM refs ---- */
-const $ = s => document.querySelector(s);
-const listEl = $('#list');
-const searchEl = $('#search');
-const catEl = $('#categoryFilter');
-const countEl = $('#count');
-const recentEl = $('#recent');
-const statCount = $('#stat-count');
-const statRecent = $('#stat-recent');
-const modeSelect = $('#modeSelect');
-const accentPicker = $('#accentPicker');
-const openAltdom = $('#open-altdom');
+    /* ==================== STATE ==================== */
+    let filteredGames = [...games];
+    let focusedIndex = -1;
+    let searchTimer = null;
+    const RECENT_KEY = 'obg_recent_v3';
+    const ACCENT_KEY = 'obg_accent_v3';
+    const MODE_KEY = 'obg_mode_v3';
+    const USER_ID = 'user_' + Math.random().toString(36).substr(2, 9);
+    const USER_TIMEOUT = 15000; // 15 seconds
+    const HEARTBEAT_INTERVAL = 5000; // 5 seconds
 
-/* ---- state ---- */
-let filtered = games.slice();
-let focusedIndex = -1;
-const RECENT_KEY = 'obg_recent_v2';
-const ACCENT_KEY = 'obg_accent';
-const MODE_KEY = 'obg_mode';
+    /* ==================== ACTIVE USERS SYSTEM ==================== */
+    async function updateActiveUsers() {
+      try {
+        const now = Date.now();
+        await window.storage.set(`active:${USER_ID}`, now.toString(), true);
+        
+        // Get all active user keys
+        const result = await window.storage.list('active:', true);
+        if (result && result.keys) {
+          let activeCount = 0;
+          
+          // Check each user's last heartbeat
+          for (const key of result.keys) {
+            try {
+              const userData = await window.storage.get(key, true);
+              if (userData && userData.value) {
+                const lastSeen = parseInt(userData.value);
+                if (now - lastSeen < USER_TIMEOUT) {
+                  activeCount++;
+                } else {
+                  // Clean up stale users
+                  await window.storage.delete(key, true).catch(() => {});
+                }
+              }
+            } catch (e) {
+              // User doesn't exist or error reading
+              continue;
+            }
+          }
+          
+          // Update displays
+          activeUsersDisplay.textContent = activeCount;
+          statUsers.textContent = activeCount;
+        }
+      } catch (error) {
+        console.error('Error updating active users:', error);
+        activeUsersDisplay.textContent = '1';
+        statUsers.textContent = '1';
+      }
+    }
 
-/* ---- render ---- */
-function renderList(items){
-  listEl.innerHTML = '';
-  const frag = document.createDocumentFragment();
-  items.forEach((g, idx) => {
-    const item = document.createElement('div');
-    item.className = 'item';
-    item.tabIndex = 0;
-    item.dataset.idx = idx;
+    // Start heartbeat
+    updateActiveUsers();
+    setInterval(updateActiveUsers, HEARTBEAT_INTERVAL);
 
-    const left = document.createElement('div');
-    left.style.display = 'flex';
-    left.style.flexDirection = 'column';
-
-    const title = document.createElement('div');
-    title.className = 'item-title';
-    title.textContent = g.title;
-
-    const meta = document.createElement('div');
-    meta.className = 'item-meta';
-    meta.textContent = g.category || '';
-
-    left.appendChild(title);
-    left.appendChild(meta);
-
-    const chevron = document.createElement('div');
-    chevron.innerHTML = '▶';
-    chevron.style.opacity = 0.6;
-    chevron.style.fontWeight = 700;
-
-    item.appendChild(left);
-    item.appendChild(chevron);
-
-    item.addEventListener('click', ()=> openGame(g));
-    item.addEventListener('keydown', (e)=> {
-      if (e.key === 'Enter') openGame(g);
-      if (e.key === 'ArrowDown') focusNext();
-      if (e.key === 'ArrowUp') focusPrev();
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      try {
+        window.storage.delete(`active:${USER_ID}`, true).catch(() => {});
+      } catch (e) {}
     });
 
-    // micro-prefetch on hover (gentle)
-    let warmed = false;
-    item.addEventListener('pointerenter', () => {
-      if (g['obg-track-link']) navigator.sendBeacon ? navigator.sendBeacon(g['obg-track-link']) : fetch(g['obg-track-link']).catch(()=>{});
-      if (!warmed) { prefetch(g['html-link']); warmed = true; }
+    /* ==================== RENDER GAMES LIST ==================== */
+    function renderGamesList(gamesToRender) {
+      gamesList.innerHTML = '';
+      
+      if (gamesToRender.length === 0) {
+        welcomeCard.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+      
+      welcomeCard.style.display = 'block';
+      emptyState.style.display = 'none';
+
+      const fragment = document.createDocumentFragment();
+      
+      gamesToRender.forEach((game, idx) => {
+        // Skip dividers
+        if (!game.title || game.title.startsWith('___') || game['html-link'] === '#') {
+          return;
+        }
+
+        const item = document.createElement('div');
+        item.className = 'game-item';
+        item.tabIndex = 0;
+        item.dataset.idx = idx;
+
+        const info = document.createElement('div');
+        info.className = 'game-info';
+
+        const title = document.createElement('div');
+        title.className = 'game-title';
+        title.textContent = game.title;
+
+        const category = document.createElement('div');
+        category.className = 'game-category';
+        category.textContent = game.category || 'Uncategorized';
+
+        info.appendChild(title);
+        info.appendChild(category);
+
+        const chevron = document.createElement('div');
+        chevron.className = 'game-chevron';
+        chevron.textContent = '▶';
+
+        item.appendChild(info);
+        item.appendChild(chevron);
+
+        // Click handler
+        item.addEventListener('click', () => openGame(game));
+        
+        // Keyboard navigation
+        item.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') openGame(game);
+          if (e.key === 'ArrowDown') focusNext();
+          if (e.key === 'ArrowUp') focusPrev();
+        });
+
+        // Hover prefetch
+        let prefetched = false;
+        item.addEventListener('pointerenter', () => {
+          if (!prefetched) {
+            prefetchGame(game['html-link']);
+            prefetched = true;
+          }
+        });
+
+        fragment.appendChild(item);
+      });
+
+      gamesList.appendChild(fragment);
+      updateCount(gamesToRender.length);
+    }
+
+    /* ==================== GAME ACTIONS ==================== */
+    function openGame(game) {
+      if (!game || !game['html-link'] || game['html-link'] === '#') return;
+      
+      window.open(game['html-link'], '_blank', 'noopener');
+      addToRecent(game);
+    }
+
+    function prefetchGame(url) {
+      if (!url || url === '#') return;
+      try {
+        const fullUrl = new URL(url, location.href);
+        if (fullUrl.origin === location.origin) {
+          fetch(fullUrl.href, { method: 'HEAD', mode: 'no-cors' }).catch(() => {});
+        }
+      } catch (e) {}
+    }
+
+    /* ==================== RECENT PLAYS ==================== */
+    function addToRecent(game) {
+      try {
+        const recent = getRecent();
+        const normalized = { title: game.title, link: game['html-link'] };
+        
+        // Remove if already exists
+        const filtered = recent.filter(r => r.link !== normalized.link);
+        
+        // Add to front
+        filtered.unshift(normalized);
+        
+        // Keep only 8
+        const updated = filtered.slice(0, 8);
+        
+        localStorage.setItem(RECENT_KEY, JSON.stringify(updated));
+        renderRecent();
+      } catch (e) {
+        console.error('Error adding to recent:', e);
+      }
+    }
+
+    function getRecent() {
+      try {
+        return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function renderRecent() {
+      const recent = getRecent();
+      
+      if (recent.length === 0) {
+        recentSection.style.display = 'none';
+        return;
+      }
+
+      recentSection.style.display = 'block';
+      recentGrid.innerHTML = '';
+
+      recent.forEach(item => {
+        const btn = document.createElement('button');
+        btn.className = 'recent-item';
+        btn.textContent = item.title;
+        btn.addEventListener('click', () => {
+          window.open(item.link, '_blank', 'noopener');
+        });
+        recentGrid.appendChild(btn);
+      });
+    }
+
+    /* ==================== SEARCH & FILTER ==================== */
+    function applyFilters() {
+      const query = searchInput.value.toLowerCase().trim();
+      const category = categoryFilter.value;
+
+      filteredGames = games.filter(game => {
+        // Skip dividers
+        if (!game.title || game.title.startsWith('___') || game['html-link'] === '#') {
+          return false;
+        }
+
+        // Category filter
+        if (category !== 'all' && game.category !== category) {
+          return false;
+        }
+
+        // Search filter
+        if (query) {
+          const titleMatch = game.title.toLowerCase().includes(query);
+          const categoryMatch = (game.category || '').toLowerCase().includes(query);
+          return titleMatch || categoryMatch;
+        }
+
+        return true;
+      });
+
+      renderGamesList(filteredGames);
+    }
+
+    function debounceApply() {
+      if (searchTimer) clearTimeout(searchTimer);
+      searchTimer = setTimeout(applyFilters, 160);
+    }
+
+    searchInput.addEventListener('input', debounceApply);
+    categoryFilter.addEventListener('change', applyFilters);
+
+    /* ==================== KEYBOARD SHORTCUTS ==================== */
+    document.addEventListener('keydown', (e) => {
+      // Focus search with /
+      if (e.key === '/' && document.activeElement !== searchInput) {
+        e.preventDefault();
+        searchInput.focus();
+        searchInput.select();
+      }
+
+      // Focus search with Ctrl+K or Cmd+K
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        searchInput.focus();
+        searchInput.select();
+      }
+
+      // Arrow down to focus first game
+      if (e.key === 'ArrowDown' && document.activeElement === searchInput) {
+        const firstItem = gamesList.querySelector('.game-item');
+        if (firstItem) {
+          e.preventDefault();
+          firstItem.focus();
+        }
+      }
     });
 
-    frag.appendChild(item);
-  });
-  listEl.appendChild(frag);
-  updateCount(items.length);
-}
+    /* ==================== FOCUS NAVIGATION ==================== */
+    function focusNext() {
+      const items = Array.from(gamesList.querySelectorAll('.game-item'));
+      if (!items.length) return;
+      focusedIndex = Math.min(focusedIndex + 1, items.length - 1);
+      items[focusedIndex].focus();
+    }
 
-/* ---- open and recent ---- */
-function openGame(g){
-  if (!g || !g['html-link'] || g['html-link'] === '#') return;
-  // tracking ping
-  if (g['obg-track-link']) navigator.sendBeacon ? navigator.sendBeacon(g['obg-track-link']) : fetch(g['obg-track-link']).catch(()=>{});
-  window.open(g['html-link'], '_blank', 'noopener');
+    function focusPrev() {
+      const items = Array.from(gamesList.querySelectorAll('.game-item'));
+      if (!items.length) return;
+      focusedIndex = Math.max(focusedIndex - 1, 0);
+      items[focusedIndex].focus();
+    }
 
-  addRecent(g);
-}
+    gamesList.addEventListener('focusin', (e) => {
+      const item = e.target.closest('.game-item');
+      if (item) {
+        focusedIndex = parseInt(item.dataset.idx || 0);
+      }
+    });
 
-function addRecent(g){
-  const cur = getRecent();
-  const normalized = { title: g.title, htmlLink: g['html-link'] };
-  const existing = cur.find(x => x.htmlLink === normalized.htmlLink);
-  let next;
-  if (existing){
-    next = cur.filter(x => x.htmlLink !== normalized.htmlLink);
-    next.unshift(normalized);
-  } else {
-    next = [normalized, ...cur];
-  }
-  next = next.slice(0,8);
-  try { localStorage.setItem(RECENT_KEY, JSON.stringify(next)); } catch(e){}
-  renderRecent();
-}
+    /* ==================== COUNT UPDATE ==================== */
+    function updateCount(count) {
+      countDisplay.textContent = `${count} game${count === 1 ? '' : 's'}`;
+      statCount.textContent = games.filter(g => g.title && !g.title.startsWith('___') && g['html-link'] !== '#').length;
+    }
 
-function getRecent(){
-  try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch(e){ return []; }
-}
-function renderRecent(){
-  recentEl.innerHTML = '';
-  const cur = getRecent();
-  statRecent.textContent = cur.length;
-  if (!cur.length){ recentEl.textContent = 'No recent plays'; return; }
-  cur.forEach(r => {
-    const b = document.createElement('button');
-    b.textContent = r.title;
-    b.addEventListener('click', ()=> window.open(r.htmlLink, '_blank', 'noopener'));
-    recentEl.appendChild(b);
-  });
-}
+    /* ==================== THEME SYSTEM ==================== */
+    function setTheme(mode) {
+      document.body.classList.remove('light', 'oled');
+      if (mode === 'light') document.body.classList.add('light');
+      if (mode === 'oled') document.body.classList.add('oled');
+      modeSelect.value = mode;
+      try {
+        localStorage.setItem(MODE_KEY, mode);
+      } catch (e) {}
+    }
 
-/* ---- count ---- */
-function updateCount(n){
-  countEl.textContent = `${n} game${n===1?'':'s'}`;
-  statCount.textContent = games.length;
-}
+    modeSelect.addEventListener('change', (e) => {
+      setTheme(e.target.value);
+    });
 
-/* ---- search/filter ---- */
-let searchTimer = null;
-function applyFilters(){
-  const q = (searchEl.value || '').trim().toLowerCase();
-  const cat = catEl.value;
-  filtered = games.filter(g => {
-    if (cat !== 'all' && (g.category||'').toLowerCase() !== cat.toLowerCase()) return false;
-    if (!q) return true;
-    return (g.title||'').toLowerCase().includes(q) || (g.category||'').toLowerCase().includes(q);
-  });
-  $('#empty').hidden = filtered.length !== 0;
-  $('#welcome').hidden = filtered.length === 0;
-  renderList(filtered);
-}
+    toggleDarkBtn.addEventListener('click', () => {
+      const current = document.body.classList.contains('light') ? 'light' : 'dark';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    });
 
-function debounceApply(){
-  if (searchTimer) clearTimeout(searchTimer);
-  searchTimer = setTimeout(applyFilters, 160);
-}
-searchEl.addEventListener('input', debounceApply);
-catEl.addEventListener('change', applyFilters);
+    /* ==================== ACCENT COLOR ==================== */
+    function setAccent(color) {
+      document.documentElement.style.setProperty('--accent', color);
+      
+      // Convert hex to RGB
+      const hex = color.replace('#', '');
+      const r = parseInt(hex.substr(0, 2), 16);
+      const g = parseInt(hex.substr(2, 2), 16);
+      const b = parseInt(hex.substr(4, 2), 16);
+      document.documentElement.style.setProperty('--accent-rgb', `${r}, ${g}, ${b}`);
+      
+      try {
+        localStorage.setItem(ACCENT_KEY, color);
+      } catch (e) {}
+    }
 
-/* ---- keyboard shortcuts ---- */
-document.addEventListener('keydown', (e) => {
-  if (e.key === '/' && document.activeElement !== searchEl) { e.preventDefault(); searchEl.focus(); }
-  if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); searchEl.focus(); }
-  if (e.key === 'ArrowDown') {
-    const first = listEl.querySelector('.item');
-    if (first) first.focus();
-  }
-});
+    accentPicker.addEventListener('input', (e) => {
+      setAccent(e.target.value);
+    });
 
-/* ---- focus helpers ---- */
-function focusNext(){
-  const items = Array.from(listEl.querySelectorAll('.item'));
-  if (!items.length) return;
-  focusedIndex = Math.min(focusedIndex + 1, items.length - 1);
-  items[focusedIndex].focus();
-}
-function focusPrev(){
-  const items = Array.from(listEl.querySelectorAll('.item'));
-  if (!items.length) return;
-  focusedIndex = Math.max(focusedIndex - 1, 0);
-  items[focusedIndex].focus();
-}
-listEl.addEventListener('focusin', e => {
-  const it = e.target.closest('.item');
-  if (!it) return;
-  focusedIndex = parseInt(it.dataset.idx || 0, 10);
-});
+    /* ==================== LOAD SAVED PREFERENCES ==================== */
+    function loadPreferences() {
+      try {
+        const savedMode = localStorage.getItem(MODE_KEY) || 'dark';
+        setTheme(savedMode);
 
-/* ---- prefetch small HEAD ---- */
-function prefetch(url){
-  if (!url) return;
-  try {
-    const u = new URL(url, location.href);
-    // only prefetch same-origin by default (avoid cross-origin noise)
-    if (u.origin !== location.origin) return;
-    fetch(u.href, { method:'HEAD', mode:'no-cors' }).catch(()=>{});
-  } catch(e){}
-}
+        const savedAccent = localStorage.getItem(ACCENT_KEY);
+        if (savedAccent) {
+          accentPicker.value = savedAccent;
+          setAccent(savedAccent);
+        }
+      } catch (e) {
+        console.error('Error loading preferences:', e);
+      }
+    }
 
-/* ---- theme + accent persistence ---- */
-function applyAccent(color){
-  document.documentElement.style.setProperty('--accent', color);
-  // use accent as focus glow too
-  document.documentElement.style.setProperty('--accent-rgb', hexToRgb(color));
-}
-function hexToRgb(hex){
-  const c = hex.replace('#','');
-  const bigint = parseInt(c,16);
-  return `${(bigint >> 16) & 255},${(bigint >> 8) & 255},${bigint & 255}`;
-}
+    /* ==================== INITIALIZATION ==================== */
+    function init() {
+      loadPreferences();
+      renderGamesList(games);
+      renderRecent();
+      updateCount(games.length);
+    }
 
-accentPicker.addEventListener('input', (e) => {
-  applyAccent(e.target.value);
-  localStorage.setItem(ACCENT_KEY, e.target.value);
-});
-
-// mode selection
-modeSelect.addEventListener('change', e => {
-  setMode(e.target.value);
-  localStorage.setItem(MODE_KEY, e.target.value);
-});
-function setMode(m){
-  document.body.classList.remove('light','oled');
-  if (m === 'light') document.body.classList.add('light');
-  if (m === 'oled') document.body.classList.add('oled');
-  modeSelect.value = m;
-}
-
-/* quick toggle */
-$('#toggleDark').addEventListener('click', ()=> {
-  if (document.body.classList.contains('light')) setMode('dark');
-  else setMode('light');
-  try { localStorage.setItem(MODE_KEY, document.body.classList.contains('light') ? 'light' : 'dark'); } catch(e){}
-});
-
-/* restore persisted settings */
-try {
-  const savedAccent = localStorage.getItem(ACCENT_KEY);
-  if (savedAccent) { accentPicker.value = savedAccent; applyAccent(savedAccent); }
-  const savedMode = localStorage.getItem(MODE_KEY) || 'dark';
-  setMode(savedMode);
-} catch(e){}
-
-/* ---- Alternative Domains page quick open ---- */
-openAltdom.addEventListener('click', ()=> {
-  window.open('/support.html', '_blank', 'noopener');
-});
-
-/* ---- init ---- */
-function init(){
-  // initial render
-  renderList(games.slice());
-  renderRecent();
-  updateCount(games.length);
-  // show welcome stats
-  statCount.textContent = games.length;
-}
-init();
-  </script>
+    init();
