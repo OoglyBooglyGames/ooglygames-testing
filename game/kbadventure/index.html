@@ -82,10 +82,27 @@
         });
 
         async function loadROM() {
-            const response = await fetch('../nes_rom/kirby.nes');
-            const buffer = await response.arrayBuffer();
-            nes.loadROM(new Uint8Array(buffer));
-            requestAnimationFrame(frame);
+            try {
+                const response = await fetch('./kirby.nes');
+                
+                if (!response.ok) {
+                    alert('ROM file not found. Please update the ROM path in the code.');
+                    return;
+                }
+                
+                const buffer = await response.arrayBuffer();
+                
+                if (buffer.byteLength === 0) {
+                    alert('ROM file is empty.');
+                    return;
+                }
+                
+                nes.loadROM(new Uint8Array(buffer));
+                requestAnimationFrame(frame);
+            } catch (error) {
+                alert('Error loading ROM: ' + error.message + '\n\nMake sure:\n1. The ROM file path is correct\n2. The file is a valid .nes ROM\n3. The file is accessible from your web server');
+                console.error('ROM loading error:', error);
+            }
         }
 
         function frame() {
