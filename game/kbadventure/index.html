@@ -82,7 +82,7 @@
         });
 
         async function loadROM() {
-            const response = await fetch('../nes_rom/kirbysadventure.nes');
+            const response = await fetch('../nes_rom/kirby.nes');
             const buffer = await response.arrayBuffer();
             nes.loadROM(new Uint8Array(buffer));
             requestAnimationFrame(frame);
