@@ -82,7 +82,7 @@
         });
 
         async function loadROM() {
-            const response = await fetch('../kbadventure_usa.nes');
+            const response = await fetch('./kbadventure_usa.nes');
             const buffer = await response.arrayBuffer();
             nes.loadROM(new Uint8Array(buffer));
             requestAnimationFrame(frame);
