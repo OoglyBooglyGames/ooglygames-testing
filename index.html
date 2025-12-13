@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>OOGLY GAMES V3.10</title>
+<title>OOGLY GAMES V3.50</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <style>
 /* ==================== RESET & BASE ==================== */
@@ -622,7 +622,7 @@ select:hover, .btn:hover {
   <header class="header">
     <div class="header-content">
       <div class="logo">
-        OOGLY BOOGLY <span class="mini">GAMES</span>
+        OOGLY BOOGLY GAMES
       </div>
 
       <div class="header-controls">
@@ -679,15 +679,13 @@ select:hover, .btn:hover {
       <main class="main-content">
         <div id="welcome" class="welcome-card">
           <h1 class="welcome-title">OOGLY BOOGLY GAMES</h1>
-          <div class="version-badge">V3.10 (DEC 13, 2025)</div>
+          <div class="version-badge">V3.50 (DEC 13, 2025)</div>
           
           <div class="update-section">
             <h3>▶ LATEST UPDATES</h3>
             <ul>
-              <li>AS YOU CAN TELL, A NEW DESIGN</li>
-              <li>FINALLY OPTIMIZED FOR 100+ GAMES</li>
-              <li>ENHANCED KEYBOARD NAVIGATION</li>
-              <li>BUG FIXES!</li>
+              <li>ADDED 55 MORE GAMES FROM CONSOLES LIKE THE NINTENDO DS, GAME BOY ADVANCE, NINTENDO 64, PLAYSTATION 1, SEGA GENESIS, NEO GEO, ETC!</li>
+              <li>FIXED BUGS WITH SOME GAMES</li>
             </ul>
           </div>
 
@@ -725,7 +723,7 @@ select:hover, .btn:hover {
   </div>
 
   <footer class="footer">
-    <div>© 2025 OOGLY BOOGLY GAMES - V3.10</div>
+    <div>© 2025 OOGLY BOOGLY GAMES - V3.50</div>
     <div class="footer-links">
       <a href="/support.html" class="footer-link">ALT DOMAINS</a>
       <a href="/help.html" class="footer-link">REPORT ISSUE</a>
@@ -737,6 +735,63 @@ select:hover, .btn:hover {
         /* ==================== GAME DATA ==================== */
     const games = [
       { title:"Report issue...", "html-link":"/help", category:"Utility" },
+      { title: "Kirby: Canvas Curse", "html-link": "game/kcc", category: "Action" },
+      { title: "Kirby: Squeak Squad", "html-link": "game/kss", category: "Action" },
+      { title: "Kirby: Super Star Ultra", "html-link": "game/kssu", category: "Action" },
+      { title: "Pokemon HeartGold", "html-link": "game/pokehg", category: "Action" },
+      { title: "Pokemon Pearl", "html-link": "game/pokepearl", category: "Action" },
+      { title: "Mario Kart DS", "html-link": "game/mkds", category: "Arcade" },
+      { title: "Mario Party DS", "html-link": "game/mpds", category: "Puzzle" },
+      { title: "Animal Crossing: Wild World", "html-link": "game/acww", category: "Idle" },
+      { title: "Air Traffic Chaos", "html-link": "game/atc", category: "Puzzle" },
+      { title: "ASP - Air Strike Patrol", "html-link": "game/aspair", category: "Action" },
+      { title: "Super Mario Kart", "html-link": "game/smk", category: "Arcade" },
+      { title: "Ace Combat 2", "html-link": "game/ac2", category: "Action" },
+      { title: "Ace Combat 3: Electrosphere", "html-link": "game/ac3", category: "Action" },
+      { title: "Aces of the Air", "html-link": "game/aofta", category: "Action" },
+      { title: "Sid Meier's Civilization II", "html-link": "game/smc2", category: "Puzzle" },
+      { title: "Crash Bandicoot", "html-link": "game/cb", category: "Action" },
+      { title: "Crash Bandicoot - Warped", "html-link": "game/cbw", category: "Action" },
+      { title: "Crash Bandicoot 2: Cortex Strikes Back", "html-link": "game/cb2", category: "Action" },
+      { title: "Crash Team Racing", "html-link": "game/ctr", category: "Arcade" },
+      { title: "Grand Theft Auto 2", "html-link": "game/gta2", category: "Action" },
+      { title: "Gran Turismo 2", "html-link": "game/gt2s", category: "Arcade" },
+      { title: "Gran Turismo 2 - Arcade Mode", "html-link": "game/gt2a", category: "Arcade" },
+      { title: "Need for Speed: High Stakes", "html-link": "game/nfshs", category: "Arcade" },
+      { title: "Need for Speed II", "html-link": "game/nfs2", category: "Arcade" },
+      { title: "Need for Speed III: Hot Pursuit", "html-link": "game/nfs3", category: "Arcade" },
+      { title: "Chopper Attack", "html-link": "game/chatt", category: "Action" },
+      { title: "Donkey Kong 64", "html-link": "game/dkong64", category: "Action" },
+      { title: "Doom 64", "html-link": "game/doom64", category: "Action" },
+      { title: "F-1 World Grand Prix", "html-link": "game/f1wgp", category: "Arcade" },
+      { title: "F-Zero X", "html-link": "game/fzerox", category: "Arcade" },
+      { title: "Kirby 64: The Crystal Shards", "html-link": "game/kirbytcs", category: "Action" },
+      { title: "Pokemon Stadium", "html-link": "game/pokestadium", category: "Action" },
+      { title: "Pokemon Stadium 2", "html-link": "game/pokestadium2", category: "Action" },
+      { title: "Pokemon Snap", "html-link": "game/pokesnap", category: "Action" },
+      { title: "Paper Mario", "html-link": "game/paperm", category: "Action" },
+      { title: "Star Fox 64", "html-link": "game/sf64", category: "Action" },
+      { title: "Aero Fighters 2", "html-link": "game/af2", category: "Action" },
+      { title: "Aero Fighters 3", "html-link": "game/af3", category: "Action" },
+      { title: "After Burner II", "html-link": "game/arb2", category: "Action" },
+      { title: "Air Buster", "html-link": "game/airb", category: "Action" },
+      { title: "Asphalt - Urban GT", "html-link": "game/augt", category: "Arcade" },
+      { title: "Asphalt - Urban GT 2", "html-link": "game/augt2", category: "Arcade" },
+      { title: "Call of Duty: World at War", "html-link": "game/codwaw", category: "Action" },
+      { title: "Madden NFL 08", "html-link": "game/nfl8", category: "Arcade" },
+      { title: "Madden NFL 09", "html-link": "game/nfl9", category: "Arcade" },
+      { title: "New Super Mario Bros.", "html-link": "game/nsmb", category: "Action" },
+      { title: "Need for Speed Carbon - Own the City", "html-link": "game/nfsco", category: "Arcade" },
+      { title: "Star Fox Command", "html-link": "game/sfoxc", category: "Action" },
+      { title: "Super Mario Bros 64 DS", "html-link": "game/smb64ds", category: "Action" },
+      { title: "The Legend of Zelda", "html-link": "game/tlz", category: "Action" },
+      { title: "The Legend of Zelda - Phantom Hourglass", "html-link": "game/tlzph", category: "Action" },
+      { title: "The Legend of Zelda - Spirit Tracks", "html-link": "game/tlzst", category: "Action" },
+      { title: "The Legend of Zelda - Majora's Mask", "html-link": "game/tlzmm", category: "Action" },
+      { title: "The Legend of Zelda - Ocarina of Time - Master Quest", "html-link": "game/tlzootmq", category: "Action" },
+      { title: "The Legend of Zelda - Ocarina of Time", "html-link": "game/tlzoot", category: "Action" },
+      { title:"Call of Duty 4: Modern Warfare (DS)", "html-link":"game/cod4mw", category:"Action"},
+      { title:"Mario Kart 64", "html-link":"game/mk64", category:"Arcade"},
       { title:"People Playground", "html-link":"game/playg", category:"Action" },
       { title:"Ace Combat Advance", "html-link":"game/aceadv", category:"Action" },
       { title:"RC Flight Simulator", "html-link":"game/rcfs", category:"Action" },
