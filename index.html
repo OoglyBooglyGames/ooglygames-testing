@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>OOGLY GAMES V3.70</title>
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
 <style>
 /* ==================== RESET & BASE ==================== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -410,7 +414,9 @@ select:hover, .btn:hover {
 }
 
 .update-section li::before {
-  content: 'â ';
+  content: "\f192"; /* FontAwesome icon code */
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
   position: absolute;
   left: 0;
   color: var(--accent);
@@ -680,9 +686,9 @@ select:hover, .btn:hover {
         <div id="welcome" class="welcome-card">
           <h1 class="welcome-title">OOGLY BOOGLY GAMES</h1>
           <div class="version-badge">V3.70 (DEC 19, 2025)</div>
-          
+
 <div class="update-section">
-  <h3>✈️ LATEST UPDATES</h3>
+  <h3><i class="fas fa-plane"></i> LATEST UPDATES</h3>
   <ul>
     <li>WE ARE SORRY FOR THE INCONVENIENCE CAUSED BY THE BLOCKING OF 70 OF OUR GAMES.</li>
     <li>WE WILL BE WORKING IN THE FUTURE TO RESTORE AS MANY GAMES AS POSSIBLE.</li>
@@ -690,7 +696,6 @@ select:hover, .btn:hover {
   </ul>
   <h1>THANK YOU FOR UNDERSTANDING.</h1>
 </div>
-
           <h3 style="margin-top: 30px; margin-bottom: 16px; text-transform: uppercase; color: var(--accent);">ALTERNATIVE DOMAINS:</h3>
           <div class="domains-list">
             <a href="https://ooglygames.vercel.app" class="domain-link" target="_blank">VERCEL.APP</a>
