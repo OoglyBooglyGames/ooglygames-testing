@@ -716,7 +716,7 @@ select:hover, .btn:hover {
         </div>
 
         <div id="recentSection" class="recent-plays" style="display: none;">
-          <h2 class="recent-header">▶️ RECENTLY PLAYED</h2>
+          <h2 class="recent-header"><i class="fas fa-play"></i> RECENTLY PLAYED</h2>
           <div id="recentGrid" class="recent-grid"></div>
         </div>
 
@@ -966,7 +966,7 @@ select:hover, .btn:hover {
 
         const chevron = document.createElement('div');
         chevron.className = 'game-chevron';
-        chevron.textContent = '▶️';
+        chevron.textContent = <i class="fas fa-play"></i>;
 
         item.appendChild(info);
         item.appendChild(chevron);
