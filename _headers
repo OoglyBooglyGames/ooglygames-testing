@@ -1,3 +1,6 @@
 /ver.txt
   Access-Control-Allow-Origin: *
   Access-Control-Allow-Methods: GET
+/launch.html
+  Content-Disposition: attachment; filename="launch.html"
+  Content-Type: application/octet-stream
