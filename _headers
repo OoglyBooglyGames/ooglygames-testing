@@ -4,3 +4,6 @@
 /launch.html
   Content-Disposition: attachment; filename="launch.html"
   Content-Type: application/octet-stream
+/launch
+  Content-Disposition: attachment; filename="launch.html"
+  Content-Type: application/octet-stream
