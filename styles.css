@@ -27,6 +27,26 @@ body{
   transition: background 240ms ease;
 }
 
+@keyframes rainbowShake {
+  0% { transform: translateX(0); color: red; }
+  10% { transform: translateX(-2px); color: orange; }
+  20% { transform: translateX(2px); color: yellow; }
+  30% { transform: translateX(-2px); color: green; }
+  40% { transform: translateX(2px); color: blue; }
+  50% { transform: translateX(-2px); color: indigo; }
+  60% { transform: translateX(2px); color: violet; }
+  70% { transform: translateX(-2px); color: red; }
+  80% { transform: translateX(2px); color: orange; }
+  90% { transform: translateX(-2px); color: yellow; }
+  100% { transform: translateX(0); color: green; }
+}
+
+.shaky-rainbow {
+  display: inline-block;
+  font-weight: bold;
+  animation: rainbowShake 1s infinite;
+}
+
 /* glass card utility */
 .glass-card{
   background: rgba(var(--glass-rgba),0.14);
