@@ -15,16 +15,16 @@ const Difficulty = {
 };
 
 const difficultyNames = [
-    "EASY",
-    "MEDIUM",
-    "HARD",
+    "Easy",
+    "Medium",
+    "Hard",
     "INSANE",
     "UNBEATABLE!",
     "BLIND NIGHTMARE"
 ];
 
 // Game objects
-let canvas, ctx;
+let canvas, ctx, overlay;
 let width = 800, height = 600;
 let currentState = GameState.MENU;
 let currentDifficulty = Difficulty.MEDIUM;
@@ -74,8 +74,8 @@ let blindNightmare = false;
 
 // Cooldowns
 let shotCooldownTimer = 0;
-const shotCooldownDuration = 5; // INSANE mode: 1 shot every 5 seconds
-const blindShotCooldown = 2;     // BLIND NIGHTMARE: 2 second cooldown
+const shotCooldownDuration = 5; // INSANE mode
+const blindShotCooldown = 2;     // BLIND NIGHTMARE
 
 // Power-up timers
 let rapidFireTimer = 0;
@@ -91,8 +91,6 @@ let distortionIntensity = 0;
 
 // Input state
 const keys = {};
-let mouseX = 0, mouseY = 0;
-let fullscreen = false;
 
 // Timing
 let lastTime = 0;
@@ -105,9 +103,7 @@ let lastFpsUpdate = 0;
 window.addEventListener('load', () => {
     canvas = document.getElementById('gameCanvas');
     ctx = canvas.getContext('2d');
-    
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    overlay = document.getElementById('ui-overlay');
     
     // Input handling
     window.addEventListener('keydown', (e) => {
@@ -127,7 +123,7 @@ window.addEventListener('load', () => {
             toggleFullscreen();
         }
         
-        // Number keys for player color (only in menu/playing)
+        // Number keys for player color
         if (currentState === GameState.PLAYING || currentState === GameState.MENU) {
             if (key === '1') player.color = '#32CD32'; // limegreen
             if (key === '2') player.color = '#00FFFF'; // cyan
@@ -140,15 +136,6 @@ window.addEventListener('load', () => {
         keys[key] = false;
     });
     
-    // Mouse position for effects
-    canvas.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        const scaleX = canvas.width / rect.width;
-        const scaleY = canvas.height / rect.height;
-        mouseX = (e.clientX - rect.left) * scaleX;
-        mouseY = (e.clientY - rect.top) * scaleY;
-    });
-    
     // Initialize stars
     regenerateStars();
     
@@ -156,41 +143,14 @@ window.addEventListener('load', () => {
     requestAnimationFrame(gameLoop);
 });
 
-function resizeCanvas() {
-    const container = canvas.parentElement;
-    const containerWidth = container.clientWidth;
-    const containerHeight = container.clientHeight;
-    
-    const aspectRatio = 4/3;
-    let newWidth = containerWidth;
-    let newHeight = containerWidth / aspectRatio;
-    
-    if (newHeight > containerHeight) {
-        newHeight = containerHeight;
-        newWidth = containerHeight * aspectRatio;
-    }
-    
-    canvas.style.width = `${newWidth}px`;
-    canvas.style.height = `${newHeight}px`;
-    
-    // Set actual canvas dimensions for crisp rendering
-    canvas.width = 800;
-    canvas.height = 600;
-    width = 800;
-    height = 600;
-}
-
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
-        fullscreen = true;
     } else {
         if (document.exitFullscreen) {
             document.exitFullscreen();
-            fullscreen = false;
         }
     }
-    // Regenerate stars to fill new screen
     setTimeout(regenerateStars, 100);
 }
 
@@ -216,7 +176,7 @@ function gameLoop(currentTime) {
         return;
     }
     
-    deltaTime = Math.min(0.05, (currentTime - lastTime) / 1000); // Cap at 50ms
+    deltaTime = Math.min(0.05, (currentTime - lastTime) / 1000);
     lastTime = currentTime;
     
     // FPS calculation
@@ -234,7 +194,7 @@ function gameLoop(currentTime) {
     }
     
     if (distortionIntensity > 0) {
-        distortionTime += deltaTime * 3; // speed
+        distortionTime += deltaTime * 3;
     }
     
     // Update game based on state
@@ -267,7 +227,7 @@ function updateMenu() {
     if (keys['ArrowLeft'] || keys['a'] || keys['A']) {
         selectedDifficultyIndex--;
         if (selectedDifficultyIndex < 0) selectedDifficultyIndex = 5;
-        // Clear key to prevent repeated rapid changes
+        // Clear key to prevent rapid changes
         keys['ArrowLeft'] = false;
         keys['a'] = false;
         keys['A'] = false;
@@ -283,9 +243,6 @@ function updateMenu() {
     // Start game with Space or Enter
     if (keys[' '] || keys['Enter']) {
         currentDifficulty = selectedDifficultyIndex;
-        insaneMode = (currentDifficulty === Difficulty.INSANE);
-        unbeatableMode = (currentDifficulty === Difficulty.UNBEATABLE);
-        blindNightmare = (currentDifficulty === Difficulty.BLIND_NIGHTMARE);
         startGame();
         keys[' '] = false;
         keys['Enter'] = false;
@@ -293,6 +250,11 @@ function updateMenu() {
 }
 
 function startGame() {
+    // Set mode flags
+    insaneMode = (currentDifficulty === Difficulty.INSANE);
+    unbeatableMode = (currentDifficulty === Difficulty.UNBEATABLE);
+    blindNightmare = (currentDifficulty === Difficulty.BLIND_NIGHTMARE);
+    
     // Base settings per difficulty
     switch (currentDifficulty) {
         case Difficulty.EASY:
@@ -366,7 +328,7 @@ function startGame() {
     
     // Apply special effects for Blind Nightmare
     if (blindNightmare) {
-        distortionIntensity = 15; // Super intense!
+        distortionIntensity = 15;
     }
     
     currentState = GameState.PLAYING;
@@ -763,7 +725,6 @@ function draw() {
     // Apply distortion (only in Blind Nightmare)
     if (blindNightmare && distortionIntensity > 0) {
         const t = distortionTime;
-        const intensity = distortionIntensity;
         
         // Complex warp
         const warpX = Math.sin(t * 2.0) * 15 + Math.sin(t * 1.3) * 10;
@@ -787,10 +748,9 @@ function draw() {
         ctx.fillRect(star.x, star.y, star.size, star.size);
     }
     
-    // Draw particles (with additive blending simulation)
+    // Draw particles
     for (let p of particles) {
-        const alpha = p.life;
-        ctx.globalAlpha = alpha;
+        ctx.globalAlpha = p.life;
         ctx.fillStyle = p.color;
         ctx.beginPath();
         ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
@@ -872,7 +832,7 @@ function draw() {
     for (let sp of scorePopups) {
         ctx.globalAlpha = sp.life;
         ctx.fillStyle = sp.color;
-        ctx.font = 'bold 14px monospace';
+        ctx.font = 'bold 14px Arial';
         ctx.textAlign = 'center';
         ctx.fillText(sp.text, sp.x, sp.y);
     }
@@ -881,125 +841,86 @@ function draw() {
     
     // Restore context (removes shake/distortion)
     ctx.restore();
-    
-    // Draw UI text (not affected by effects)
-    if (currentState === GameState.PLAYING) {
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 20px monospace';
-        ctx.fillText(`Score: ${score}  High Score: ${highScore}`, 10, 30);
-        
-        const healthText = (insaneMode || unbeatableMode || blindNightmare) 
-            ? `Health: ${player.health}/1` 
-            : `Health: ${player.health}/3`;
-        ctx.fillStyle = 'lightgreen';
-        ctx.font = '16px monospace';
-        ctx.fillText(healthText, 10, 55);
-        
-        ctx.fillStyle = 'yellow';
-        ctx.fillText(`FPS: ${fps}`, 10, 80);
-        
-        // Top-right info
-        const diffName = difficultyNames[currentDifficulty];
-        ctx.fillStyle = 'orange';
-        ctx.textAlign = 'right';
-        ctx.fillText(`Difficulty: ${diffName}`, width - 20, 30);
-        
-        if (insaneMode) {
-            if (shotCooldownTimer > 0) {
-                ctx.fillStyle = 'magenta';
-                ctx.fillText(`Shot ready in: ${shotCooldownTimer.toFixed(1)}s`, width - 20, 55);
-            } else {
-                ctx.fillStyle = 'lime';
-                ctx.fillText('Shot ready!', width - 20, 55);
-            }
-        }
-        
-        if (blindNightmare) {
-            if (shotCooldownTimer > 0) {
-                ctx.fillStyle = 'magenta';
-                ctx.fillText(`Blind shot: ${shotCooldownTimer.toFixed(1)}s`, width - 20, 55);
-            } else {
-                ctx.fillStyle = 'lime';
-                ctx.fillText('Blind shot ready!', width - 20, 55);
-            }
-        }
-        
-        if (unbeatableMode) {
-            ctx.fillStyle = 'red';
-            ctx.fillText('GOOD LUCK', width - 20, 55);
-        }
-        
-        if (rapidFireTimer > 0) {
-            ctx.fillStyle = 'orange';
-            ctx.fillText(`Rapid Fire: ${rapidFireTimer.toFixed(1)}s`, width - 20, 75);
-        }
-        if (shieldTimer > 0) {
-            ctx.fillStyle = 'cyan';
-            ctx.fillText(`Shield: ${shieldTimer.toFixed(1)}s`, width - 20, 95);
-        }
-        
-        ctx.textAlign = 'left';
-    }
-    
-    // Update menu overlay HTML (simpler than drawing)
-    updateMenuOverlay();
 }
 
 function updateUI() {
-    // Update the top UI overlay if needed (we're drawing directly now)
-}
-
-function updateMenuOverlay() {
-    const overlay = document.getElementById('menu-overlay');
+    let html = '';
     
     if (currentState === GameState.MENU) {
-        overlay.innerHTML = `
-            <div class="menu-box">
-                <h1>SPACALLAX 2.0.0</h1>
-                <div class="difficulty-selector">
-                    <button class="difficulty-btn ${selectedDifficultyIndex === 0 ? 'selected' : ''}" 
-                            onclick="selectDifficulty(0)">EASY</button>
-                    <button class="difficulty-btn ${selectedDifficultyIndex === 1 ? 'selected' : ''}" 
-                            onclick="selectDifficulty(1)">MEDIUM</button>
-                    <button class="difficulty-btn ${selectedDifficultyIndex === 2 ? 'selected' : ''}" 
-                            onclick="selectDifficulty(2)">HARD</button>
-                    <button class="difficulty-btn ${selectedDifficultyIndex === 3 ? 'selected' : ''}" 
-                            onclick="selectDifficulty(3)">INSANE</button>
-                    <button class="difficulty-btn ${selectedDifficultyIndex === 4 ? 'selected' : ''}" 
-                            onclick="selectDifficulty(4)">UNBEATABLE!</button>
-                    <button class="difficulty-btn ${selectedDifficultyIndex === 5 ? 'selected' : ''}" 
-                            onclick="selectDifficulty(5)">BLIND NIGHTMARE</button>
+        html = `
+            <div class="menu-container">
+                <div class="menu-title">SPACALLAX 2.0.0</div>
+                <div class="menu-prompt">Select Difficulty:</div>
+                <div class="difficulty-display">
+                    ${difficultyNames[selectedDifficultyIndex]}
                 </div>
-                <button class="start-btn" onclick="startGame()">START GAME</button>
+                <div class="menu-hint">
+                    <kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd> to select<br>
+                    <kbd>SPACE</kbd> or <kbd>ENTER</kbd> to start<br>
+                    <kbd>F11</kbd> Fullscreen<br>
+                    <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> Change color
+                </div>
             </div>
         `;
-        overlay.style.pointerEvents = 'auto';
+    } else if (currentState === GameState.PLAYING) {
+        // In-game UI
+        const healthText = (insaneMode || unbeatableMode || blindNightmare) 
+            ? `Health: ${player.health}/1` 
+            : `Health: ${player.health}/3`;
+        
+        let cooldownText = '';
+        if (insaneMode) {
+            if (shotCooldownTimer > 0) {
+                cooldownText = `<div style="color: magenta; font-size: 14px;">Shot ready in: ${shotCooldownTimer.toFixed(1)}s</div>`;
+            } else {
+                cooldownText = `<div style="color: green; font-size: 14px;">Shot ready!</div>`;
+            }
+        }
+        if (blindNightmare) {
+            if (shotCooldownTimer > 0) {
+                cooldownText = `<div style="color: magenta; font-size: 14px;">Blind shot: ${shotCooldownTimer.toFixed(1)}s</div>`;
+            } else {
+                cooldownText = `<div style="color: green; font-size: 14px;">Blind shot ready!</div>`;
+            }
+        }
+        if (unbeatableMode) {
+            cooldownText = `<div style="color: red; font-size: 16px;">GOOD LUCK</div>`;
+        }
+        
+        let powerupText = '';
+        if (rapidFireTimer > 0) {
+            powerupText += `<div style="color: orange; font-size: 12px;">Rapid Fire: ${rapidFireTimer.toFixed(1)}s</div>`;
+        }
+        if (shieldTimer > 0) {
+            powerupText += `<div style="color: cyan; font-size: 12px;">Shield: ${shieldTimer.toFixed(1)}s</div>`;
+        }
+        
+        html = `
+            <div class="game-ui">
+                <div class="top-left">
+                    <div>Score: ${score}  High Score: ${highScore}</div>
+                    <div class="health-text">${healthText}</div>
+                    <div class="fps-text">FPS: ${fps}</div>
+                </div>
+                <div class="top-right">
+                    <div class="difficulty-text">Difficulty: ${difficultyNames[currentDifficulty]}</div>
+                    ${cooldownText}
+                    ${powerupText}
+                </div>
+                <div class="fullscreen-hint">F11: Fullscreen</div>
+                <div class="color-hint">1: Green  2: Blue  3: Orange</div>
+            </div>
+        `;
     } else if (currentState === GameState.GAME_OVER) {
-        overlay.innerHTML = `
-            <div class="game-over-box">
-                <h1>GAME OVER</h1>
-                <h2>Your Score: ${score}</h2>
-                <h2>High Score: ${highScore}</h2>
-                <div class="restart-hint">Press R to return to menu</div>
+        html = `
+            <div class="gameover-container">
+                <div class="gameover-title">GAME OVER</div>
+                <div class="gameover-scores">Your Score: ${score}</div>
+                <div class="gameover-scores">High Score: ${highScore}</div>
+                <div class="gameover-hint">Press R to return to menu</div>
             </div>
         `;
-        overlay.style.pointerEvents = 'none';
-    } else {
-        overlay.innerHTML = '';
-        overlay.style.pointerEvents = 'none';
     }
+    
+    overlay.innerHTML = html;
 }
-
-// Global functions for button clicks
-window.selectDifficulty = function(index) {
-    selectedDifficultyIndex = index;
-    updateMenuOverlay();
-};
-
-window.startGame = function() {
-    currentDifficulty = selectedDifficultyIndex;
-    insaneMode = (currentDifficulty === Difficulty.INSANE);
-    unbeatableMode = (currentDifficulty === Difficulty.UNBEATABLE);
-    blindNightmare = (currentDifficulty === Difficulty.BLIND_NIGHTMARE);
-    startGame();
-};
