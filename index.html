@@ -603,9 +603,6 @@
         </div>
         <div id="gamesList" class="games-scroll"></div>
         <div style="padding: 16px; border-top: 1px solid var(--border-light);">
-          <div style="display: flex; gap: 8px; align-items: center; color: var(--text-secondary);">
-            <i class="fa-regular fa-eye"></i> <span id="activeUsers">0</span> online now
-          </div>
         </div>
       </aside>
 
@@ -616,8 +613,6 @@
           <h1 class="hero-title">PLAY. REPEAT. <br> NO RULES.</h1>
           <div class="stat-grid-mini">
             <div class="stat-block"><span class="stat-number" id="statCount">0</span> <span>GAMES</span></div>
-            <div class="stat-block"><span class="stat-number" id="statUsers">1</span> <span>ACTIVE</span></div>
-            <div class="stat-block"><span class="stat-number">∞</span> <span>FUN</span></div>
           </div>
 
           <!-- update cards (new feature) -->
@@ -792,7 +787,6 @@
       const modeSelect = document.getElementById('modeSelect');
       const accentPicker = document.getElementById('accentPicker');
       const toggleDark = document.getElementById('toggleDark');
-      const activeUsersSpan = document.getElementById('activeUsers');
       const statCount = document.getElementById('statCount');
       const statUsers = document.getElementById('statUsers');
       const welcomeDiv = document.getElementById('welcome');
@@ -805,16 +799,6 @@
       const MODE_KEY = 'obg_mode_v4';
 
       let filteredGames = [...games];
-      let activeUserCount = 1;
-
-      // ----- ACTIVE USERS SIMULATION (random fluctuation for professional feel)
-      function updateActiveUsers() {
-        activeUserCount = Math.floor(Math.random() * 5) + 4; // 4-8 users
-        activeUsersSpan.textContent = activeUserCount;
-        if(statUsers) statUsers.textContent = activeUserCount;
-      }
-      setInterval(updateActiveUsers, 8000);
-      updateActiveUsers();
 
       // render games (modern style)
       function renderGamesList(gamesArray) {
