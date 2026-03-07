@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JSLinux Alpine X-Window - Fullscreen VM</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100vh; overflow: hidden; background-color: #000; font-family: 'Courier New', monospace; }
+        .vm-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; flex-direction: column; background: #1a1a1a; }
+        .vm-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; background: #2d2d2d; color: #00ff00; border-bottom: 2px solid #404040; font-size: 14px; z-index: 10; }
+        .vm-title { display: flex; align-items: center; gap: 12px; }
+        .vm-title i { font-style: normal; color: #ffaa00; }
+        .vm-controls { display: flex; gap: 12px; }
+        .vm-controls button { background: #404040; border: none; color: #fff; padding: 6px 16px; border-radius: 4px; cursor: pointer; font-family: 'Courier New', monospace; font-weight: bold; transition: all 0.2s; }
+        .vm-controls button:hover { background: #00aa00; color: #000; }
+        .vm-controls button.exit-btn:hover { background: #ff4444; }
+        .vm-iframe { flex: 1; width: 100%; border: none; background: #000; }
+        .loading-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #00ff00; font-size: 20px; background: rgba(0,0,0,0.8); padding: 20px 40px; border-radius: 8px; border: 2px solid #00ff00; z-index: 5; pointer-events: none; transition: opacity 0.5s; }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+        @media (max-width: 600px) { .vm-header { flex-direction: column; gap: 8px; padding: 12px; } .vm-title { font-size: 12px; } }
+    </style>
+</head>
+<body>
+    <div class="vm-container">
+        <div class="vm-header">
+            <div class="vm-title"><span>🐧 Alpine Linux</span><span>|</span><span>X Window</span><span>|</span><span>256MB RAM</span></div>
+            <div class="vm-controls"><button onclick="window.location.reload()">⟲ Restart</button><button class="exit-btn" onclick="exitFullscreen()">⤬ Exit</button></div>
+        </div>
+        <iframe class="vm-iframe" src="https://bellard.org/jslinux/vm.html?url=alpine-x86-xwin.cfg&mem=256&graphic=1" allow="autoplay; clipboard-write; encrypted-media; fullscreen" allowfullscreen loading="lazy" sandbox="allow-same-origin allow-scripts allow-popups allow-forms" referrerpolicy="no-referrer" title="Alpine X-Window VM" id="vmFrame"></iframe>
+        <div class="loading-overlay" id="loadingOverlay">⏳ Loading Alpine Linux (X11)...</div>
+    </div>
+    <script>
+        const iframe = document.getElementById('vmFrame'), loading = document.getElementById('loadingOverlay');
+        iframe.addEventListener('load', () => setTimeout(() => loading.classList.add('hidden'), 800));
+        setTimeout(() => loading.classList.add('hidden'), 8000);
+        function exitFullscreen() { if (document.exitFullscreen) document.exitFullscreen(); else if (document.webkitExitFullscreen) document.webkitExitFullscreen(); else if (document.msExitFullscreen) document.msExitFullscreen(); }
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') exitFullscreen(); });
+        document.addEventListener('dblclick', (e) => { if (!e.target.closest('button')) exitFullscreen(); });
+    </script>
+    <noscript><div style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; color:#f00; text-align:center; padding:50px;">JavaScript is required to run JSLinux. Please enable JavaScript in your browser.</div></noscript>
+</body>
+</html>
