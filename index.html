@@ -247,7 +247,7 @@ main { flex: 1; padding: 16px; overflow-y: auto; min-width: 0; }
     </div>
     <div class="about-version">Oogly Boogly Learning · Version 6.0</div>
     <p class="about-p">Oogly Boogly Learning makes assignments easy, with a simple, easy to use portal for your assignments.</p>
-    <p class="about-p">Use the <strong>Settings</strong> menu to make assignments even more fun by being able to: change the accent color, background, site nickname, and what the cloaked tabs say.</p>
+    <p class="about-p">Use the <strong>Settings</strong> menu to make assignments even more fun by being able to: change the accent color, background, etc.</p>
   </div>
 </div>
 
@@ -290,12 +290,6 @@ main { flex: 1; padding: 16px; overflow-y: auto; min-width: 0; }
     </div>
 
     <hr class="setting-divider"/>
-
-    <div class="setting-row">
-      <label class="setting-label">Site Nickname</label>
-      <span class="setting-sub">Replaces the logo text — leave blank for default</span>
-      <input class="setting-input" type="text" id="nicknameInput" maxlength="30" placeholder="Oogly Boogly Learning"/>
-    </div>
 
     <hr class="setting-divider"/>
 
@@ -454,7 +448,6 @@ const newsData = [
 const DEFAULTS = {
   accent: '#4ade80',
   bg: '#0e0e0e',
-  nickname: '',
   cloakTitle: 'Google Classroom',
   gameCloakTitle: 'Google Classroom',
   cloaked: false
@@ -525,16 +518,6 @@ function applyConfig(save = true) {
   r.style.setProperty('--surface2', lighten(cfg.bg, 16));
   r.style.setProperty('--border', lighten(cfg.bg, 26));
   r.style.setProperty('--card-hover', lighten(cfg.bg, 14));
-
-  // Logo / nickname
-  const logoEl = document.getElementById('logoEl');
-  if (logoEl) {
-    if (cfg.nickname) {
-      logoEl.textContent = cfg.nickname;
-    } else {
-      logoEl.innerHTML = 'Oogly Boogly <span>Learning</span>';
-    }
-  }
 
   // Cloak button
   const cb = document.getElementById('cloakBtn');
@@ -777,9 +760,6 @@ function populateSettingsUI() {
   ).join('');
   document.getElementById('colorPicker').value = cfg.accent;
   document.getElementById('bgPicker').value = cfg.bg;
-  document.getElementById('nicknameInput').value = cfg.nickname || '';
-  document.getElementById('cloakTitleInput').value = cfg.cloakTitle || 'Google Classroom';
-  document.getElementById('gameCloakTitleInput').value = cfg.gameCloakTitle || 'Google Classroom';
 }
 
 function selectSwatch(color) {
@@ -803,9 +783,6 @@ function previewBg(val) {
 function saveSettings() {
   cfg.accent = document.getElementById('colorPicker').value;
   cfg.bg = document.getElementById('bgPicker').value;
-  cfg.nickname = document.getElementById('nicknameInput').value.trim();
-  cfg.cloakTitle = document.getElementById('cloakTitleInput').value.trim() || 'Google Classroom';
-  cfg.gameCloakTitle = document.getElementById('gameCloakTitleInput').value.trim() || 'Google Classroom';
   applyConfig(true);
   if (cfg.cloaked) applySiteCloak();
   closeModal('settingsModal');
