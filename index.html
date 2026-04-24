@@ -702,7 +702,7 @@ function renderGrid() {
   });
 
   document.getElementById('sectionTitle').textContent = currentCat === 'All' ? 'All Assignments' : currentCat;
-  document.getElementById('sectionCount').textContent = `${filtered.length} game${filtered.length!==1?'s':''}`;
+  document.getElementById('sectionCount').textContent = `${filtered.length} assignment${filtered.length!==1?'s':''}`;
 
   const grid = document.getElementById('gameGrid');
   if (filtered.length === 0) {
