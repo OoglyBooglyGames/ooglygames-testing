@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Oogly Boogly Learning</title>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" id="siteIcon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+:root {
+  --bg: #0e0e0e;
+  --surface: #161616;
+  --surface2: #1e1e1e;
+  --border: #2a2a2a;
+  --text: #e8e8e8;
+  --muted: #666;
+  --accent: #4ade80;
+  --accent-rgb: 74,222,128;
+  --card-hover: #1c1c1c;
+  --radius: 6px;
+  --font-main: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-main); min-height: 100vh; }
+
+/* ── HEADER ── */
+header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 0 16px; display: flex; align-items: center; gap: 10px; height: 52px;
+}
+.logo { font-size: 15px; font-weight: 800; color: var(--accent); white-space: nowrap; cursor: pointer; user-select: none; }
+.logo span { color: var(--text); }
+.badge { font-family: var(--font-mono); font-size: 10px; background: var(--border); color: var(--muted); padding: 2px 6px; border-radius: 3px; flex-shrink: 0; }
+#search {
+  flex: 1; max-width: 300px; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text); font-family: var(--font-main); font-size: 13px;
+  padding: 6px 12px; outline: none; transition: border-color .15s;
+}
+#search::placeholder { color: var(--muted); }
+#search:focus { border-color: var(--accent); }
+.header-btns { display: flex; gap: 6px; margin-left: auto; }
+.hbtn {
+  background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
+  font-family: var(--font-mono); font-size: 11px; padding: 5px 10px; border-radius: var(--radius);
+  cursor: pointer; transition: all .12s; white-space: nowrap;
+}
+.hbtn:hover { border-color: var(--accent); color: var(--accent); }
+.hbtn.active { border-color: var(--accent); color: var(--accent); background: rgba(var(--accent-rgb),.08); }
+
+/* ── LAYOUT ── */
+.layout { display: flex; min-height: calc(100vh - 52px); }
+
+/* ── SIDEBAR ── */
+aside {
+  width: 155px; min-width: 155px; background: var(--surface);
+  border-right: 1px solid var(--border); padding: 12px 0;
+  position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto;
+}
+.sidebar-label {
+  font-family: var(--font-mono); font-size: 9px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px; padding: 4px 14px 6px;
+}
+.cat-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; background: none; border: none; color: var(--muted);
+  font-family: var(--font-main); font-size: 13px; text-align: left;
+  padding: 7px 14px; cursor: pointer; transition: all .12s;
+  border-left: 2px solid transparent;
+}
+.cat-btn:hover { color: var(--text); background: var(--surface2); }
+.cat-btn.active { color: var(--accent); border-left-color: var(--accent); background: var(--surface2); }
+.cat-count { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+
+/* ── MAIN ── */
+main { flex: 1; padding: 16px; overflow-y: auto; min-width: 0; }
+
+/* NEWS STRIP */
+.news-strip {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 10px 14px; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 10px;
+  cursor: pointer;
+}
+.news-strip:hover { border-color: var(--accent); }
+.news-tag {
+  font-family: var(--font-mono); font-size: 9px; color: var(--accent);
+  background: rgba(var(--accent-rgb),.1); border: 1px solid rgba(var(--accent-rgb),.3);
+  padding: 2px 6px; border-radius: 3px; white-space: nowrap; margin-top: 2px; flex-shrink: 0;
+}
+.news-entries { flex: 1; }
+.news-entry { margin-bottom: 4px; }
+.news-entry:last-child { margin-bottom: 0; }
+.news-date { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-right: 6px; }
+.news-text { font-size: 12px; color: var(--text); }
+
+/* SECTION HEADER */
+.section-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  border-bottom: 1px solid var(--border); padding-bottom: 10px;
+}
+.section-title { font-size: 14px; font-weight: 700; }
+.section-count { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+/* GAME GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  gap: 7px;
+}
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 11px 10px; cursor: pointer; transition: all .12s; position: relative; overflow: hidden;
+  user-select: none;
+}
+.card:hover { background: var(--card-hover); border-color: var(--accent); transform: translateY(-1px); }
+.card:hover .card-arrow { opacity: 1; }
+.card:active { transform: translateY(0); }
+.card-title { font-size: 12px; font-weight: 700; margin-bottom: 5px; line-height: 1.3; padding-right: 14px; }
+.card-cat { font-family: var(--font-mono); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; display: flex; align-items: center; gap: 5px; }
+.cat-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.card-arrow { position: absolute; right: 8px; top: 10px; color: var(--accent); font-size: 11px; opacity: 0; transition: opacity .12s; }
+
+/* ── MODALS ── */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .15s;
+}
+.modal-bg.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 22px; width: 430px; max-width: 95vw; max-height: 88vh; overflow-y: auto;
+  transform: translateY(8px); transition: transform .15s;
+}
+.modal-bg.open .modal { transform: translateY(0); }
+.modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.modal-title { font-size: 15px; font-weight: 800; color: var(--accent); }
+.modal-close { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; line-height: 1; padding: 2px 6px; border-radius: 3px; }
+.modal-close:hover { color: var(--text); background: var(--surface2); }
+
+/* ABOUT */
+.about-version { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+.about-p { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 10px; }
+.about-credits { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); line-height: 1.7; }
+
+/* NEWS MODAL */
+.news-item { border-bottom: 1px solid var(--border); padding: 13px 0; }
+.news-item:last-child { border-bottom: none; }
+.news-item-date { font-family: var(--font-mono); font-size: 10px; color: var(--accent); margin-bottom: 4px; }
+.news-item-title { font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+.news-item-body { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+/* SETTINGS */
+.setting-row { margin-bottom: 18px; }
+.setting-label { font-size: 12px; font-weight: 700; margin-bottom: 4px; display: block; }
+.setting-sub { font-size: 11px; color: var(--muted); margin-bottom: 8px; display: block; }
+.setting-input {
+  width: 100%; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text); font-family: var(--font-mono);
+  font-size: 12px; padding: 7px 10px; outline: none; transition: border-color .12s;
+}
+.setting-input:focus { border-color: var(--accent); }
+.color-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 8px; }
+.color-swatch {
+  width: 28px; height: 28px; border-radius: 4px; border: 2px solid transparent;
+  cursor: pointer; transition: border-color .12s; flex-shrink: 0;
+}
+.color-swatch:hover { border-color: rgba(255,255,255,.5); }
+.color-swatch.selected { border-color: #fff; }
+.color-input-wrap { display: flex; align-items: center; gap: 8px; }
+.color-picker { width: 34px; height: 28px; border: 1px solid var(--border); border-radius: 4px; padding: 2px; background: var(--surface2); cursor: pointer; flex-shrink: 0; }
+.save-btn {
+  width: 100%; background: var(--accent); color: #000; font-family: var(--font-main);
+  font-weight: 700; font-size: 13px; border: none; border-radius: var(--radius);
+  padding: 9px; cursor: pointer; margin-top: 6px; transition: opacity .12s;
+}
+.save-btn:hover { opacity: .85; }
+.reset-btn {
+  width: 100%; background: none; color: var(--muted); font-family: var(--font-mono);
+  font-size: 11px; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 7px; cursor: pointer; margin-top: 6px; transition: all .12s;
+}
+.reset-btn:hover { border-color: var(--muted); color: var(--text); }
+.setting-divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 18px; right: 18px; z-index: 999;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 9px 14px; font-size: 12px; font-family: var(--font-mono); color: var(--text);
+  opacity: 0; transform: translateY(6px); transition: all .18s; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* NO RESULTS */
+.no-results { color: var(--muted); font-size: 13px; text-align: center; padding: 48px; grid-column: 1/-1; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo" id="logoEl" onclick="filterCat('All')">Oogly Boogly <span>Learning</span></div>
+  <span class="badge">v6</span>
+  <input id="search" type="text" placeholder="Search assignments..." oninput="onSearch(this.value)" autocomplete="off"/>
+  <div class="header-btns">
+    <button class="hbtn" id="cloakBtn" onclick="toggleCloak()">🎭 Cloak</button>
+    <button class="hbtn" onclick="openModal('newsModal')">📰 News</button>
+    <button class="hbtn" onclick="openModal('settingsModal')">⚙ Settings</button>
+    <button class="hbtn" onclick="openModal('aboutModal')">? About</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside id="sidebar"></aside>
+  <main>
+    <div class="news-strip" onclick="openModal('newsModal')">
+      <span class="news-tag">UPDATES</span>
+      <div class="news-entries" id="newsStrip"></div>
+    </div>
+    <div class="section-header">
+      <span class="section-title" id="sectionTitle">All Assignments</span>
+      <span class="section-count" id="sectionCount"></span>
+    </div>
+    <div class="grid" id="gameGrid"></div>
+  </main>
+</div>
+
+<!-- ABOUT MODAL -->
+<div class="modal-bg" id="aboutModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">📚 About</div>
+      <button class="modal-close" onclick="closeModal('aboutModal')">✕</button>
+    </div>
+    <div class="about-version">Oogly Boogly Learning · Version 6.0</div>
+    <p class="about-p">Oogly Boogly Learning makes assignments easy, with a simple, easy to use portal for your assignments.</p>
+    <p class="about-p">Use the <strong>Settings</strong> menu to make assignments even more fun by being able to: change the accent color, background, site nickname, and what the cloaked tabs say.</p>
+  </div>
+</div>
+
+<!-- NEWS MODAL -->
+<div class="modal-bg" id="newsModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">📰 News & Updates</div>
+      <button class="modal-close" onclick="closeModal('newsModal')">✕</button>
+    </div>
+    <div id="newsList"></div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-bg" id="settingsModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">⚙ Customize</div>
+      <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
+    </div>
+
+    <div class="setting-row">
+      <label class="setting-label">Accent Color</label>
+      <span class="setting-sub">Color used for highlights, active states, and buttons</span>
+      <div class="color-row" id="swatchRow"></div>
+      <div class="color-input-wrap">
+        <input type="color" class="color-picker" id="colorPicker" oninput="previewAccent(this.value)"/>
+        <span style="font-size:11px;color:var(--muted);">Custom (pick any color)</span>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <label class="setting-label">Background</label>
+      <span class="setting-sub">How dark (or not) you want it</span>
+      <div class="color-input-wrap">
+        <input type="color" class="color-picker" id="bgPicker" oninput="previewBg(this.value)"/>
+        <span style="font-size:11px;color:var(--muted);">Background color</span>
+      </div>
+    </div>
+
+    <hr class="setting-divider"/>
+
+    <div class="setting-row">
+      <label class="setting-label">Site Nickname</label>
+      <span class="setting-sub">Replaces the logo text — leave blank for default</span>
+      <input class="setting-input" type="text" id="nicknameInput" maxlength="30" placeholder="Oogly Boogly Learning"/>
+    </div>
+
+    <hr class="setting-divider"/>
+
+    <div class="setting-row">
+      <label class="setting-label">Main Tab Cloak Title</label>
+      <span class="setting-sub">What this tab shows when cloaked</span>
+      <input class="setting-input" type="text" id="cloakTitleInput" maxlength="60" placeholder="Google Classroom"/>
+    </div>
+
+    <div class="setting-row">
+      <label class="setting-label">Assignment Tab Cloak Title</label>
+      <span class="setting-sub">What the assignment tab shows</span>
+      <input class="setting-input" type="text" id="gameCloakTitleInput" maxlength="60" placeholder="Google Classroom"/>
+    </div>
+
+    <button class="save-btn" onclick="saveSettings()">Save & Apply</button>
+    <button class="reset-btn" onclick="resetSettings()">Reset to Defaults</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ──────────────────────────────────────────────
+// DATA
+// ──────────────────────────────────────────────
+const assignments = [
+  { title:"Report issue...", link:"/help", category:"Utility" },
+  { title:"Alpine Linux Emulator", link:"/assignment/alpineconsole", category:"Utility" },
+  { title:"Alpine Linux Desktop Emulator", link:"/assignment/alpinelinuxwgui/", category:"Utility" },
+  { title:"Fedora Linux Emulator", link:"/assignment/linuxfedora33.html", category:"Utility" },
+  { title:"FreeDOS Emulator", link:"/assignment/freedos/freedos", category:"Utility" },
+  { title:"Spacallax", link:"/assignment/spacallax", category:"Action" },
+  { title:"Race King", link:"assignment/raceking", category:"Action" },
+  { title:"FNAF Pizzeria Sim", link:"assignment/fnafps", category:"Action" },
+  { title:"Windows XP Emu", link:"assignment/winxp", category:"Utility" },
+  { title:"Windows 95 Emu", link:"assignment/win95", category:"Utility" },
+  { title:"Geometry Dash World", link:"assignment/gdworld", category:"Puzzle" },
+  { title:"Paper Minecraft", link:"assignment/papermc", category:"Arcade" },
+  { title:"Geometry Dash", link:"assignment/regulargd", category:"Puzzle" },
+  { title:"Pokemon Ruby", link:"assignment/ruby2", category:"Arcade" },
+  { title:"Pokemon Sapphire", link:"assignment/sapp", category:"Arcade" },
+  { title:"Spiral Roll", link:"assignment/sroll", category:"Arcade" },
+  { title:"Brick War", link:"assignment/bwar", category:"Action" },
+  { title:"Pokemon Mystery Dungeon Red", link:"assignment/mysred", category:"Arcade" },
+  { title:"Pokemon Leaf Green", link:"assignment/pgreen", category:"Arcade" },
+  { title:"Sonic Advance", link:"assignment/sonicadv", category:"Arcade" },
+  { title:"Sonic Advance 2", link:"assignment/sonicadv2", category:"Arcade" },
+  { title:"Sonic Advance 3", link:"assignment/sonicadv3", category:"Arcade" },
+  { title:"Sonic Battle", link:"assignment/sbattle", category:"Action" },
+  { title:"Super Mario Advance", link:"assignment/marioadv", category:"Arcade" },
+  { title:"Super Mario Advance 2", link:"assignment/marioadv2", category:"Arcade" },
+  { title:"Super Mario Advance 3", link:"assignment/marioadv3", category:"Arcade" },
+  { title:"Super Mario Advance 4", link:"assignment/marioadv4", category:"Arcade" },
+  { title:"Wario Land 4", link:"assignment/wl4", category:"Arcade" },
+  { title:"Wario Ware Inc.", link:"assignment/ww", category:"Arcade" },
+  { title:"Zelda: Link to the Past", link:"assignment/zpt", category:"Action" },
+  { title:"Zelda: Minish Cap", link:"assignment/zmh", category:"Action" },
+  { title:"Kirby: Nightmare", link:"assignment/knd", category:"Action" },
+  { title:"Kirby: Amazing Mirror", link:"assignment/tam", category:"Action" },
+  { title:"F-Zero: Max Velocity", link:"assignment/fzm", category:"Action" },
+  { title:"F-Zero: GP Legend", link:"assignment/fzg", category:"Action" },
+  { title:"Minecraft 1.12.2", link:"assignment/eagler1122w/", category:"Action" },
+  { title:"Minecraft 1.8.8", link:"assignment/eagler188w/", category:"Action" },
+  { title:"Minecraft 1.5.2 (Precision)", link:"assignment/eagler152precisionc/", category:"Action" },
+  { title:"Click Test", link:"assignment/clicks", category:"Action" },
+  { title:"Minecraft 1.5.2", link:"assignment/eagler152/", category:"Action" },
+  { title:"Minecraft Classic", link:"assignment/mcclassic/", category:"Action" },
+  { title:"Snow Rider 3D", link:"assignment/snowrider/", category:"Arcade" },
+  { title:"Asteroids", link:"assignment/asteroids/", category:"Arcade" },
+  { title:"Dino", link:"assignment/dino/", category:"Arcade" },
+  { title:"Dino++", link:"assignment/dinoplusplus/", category:"Arcade" },
+  { title:"2048", link:"assignment/2048/", category:"Puzzle" },
+  { title:"ASCII Space", link:"assignment/asciispace", category:"Action" },
+  { title:"Henry Stickman: Breaking Bank", link:"assignment/btb", category:"Arcade" },
+  { title:"Henry Stickman: Escaping Prison", link:"assignment/etp", category:"Arcade" },
+  { title:"Henry Stickman: Crossing the Pit", link:"assignment/fctp", category:"Arcade" },
+  { title:"Henry Stickman: Fleeing Complex", link:"assignment/ftc", category:"Arcade" },
+  { title:"Henry Stickman: Infiltrating Airship", link:"assignment/ita", category:"Arcade" },
+  { title:"Henry Stickman: Stealing Diamond", link:"assignment/stealingthediamond", category:"Arcade" },
+  { title:"Cookie Clicker", link:"assignment/index.html", category:"Idle" },
+  { title:"Drift Boss", link:"assignment/driftboss", category:"Arcade" },
+  { title:"Snake.io", link:"assignment/snakeio", category:"Arcade" },
+  { title:"Drift Hunters", link:"assignment/drifthunters", category:"Arcade" },
+  { title:"Race Survival Arena King", link:"/rsak", category:"Action" },
+  { title:"Deadly Descent", link:"/dd", category:"Action" },
+  { title:"ArrowMaster.io", link:"/am", category:"Action" },
+  { title:"Bit Planes", link:"assignment/bitp", category:"Action" },
+  { title:"Bloons TD", link:"assignment/btd", category:"Puzzle" },
+  { title:"Bloons TD 2", link:"assignment/btd2", category:"Puzzle" },
+  { title:"Bloons TD 3", link:"assignment/btd3", category:"Puzzle" },
+  { title:"Bloons TD 5", link:"assignment/btd5", category:"Puzzle" },
+  { title:"Capybara Clicker", link:"assignment/capyclicker", category:"Idle" },
+  { title:"Deltarune", link:"assignment/deltar", category:"Action" },
+  { title:"Doom", link:"assignment/doom", category:"Action" },
+  { title:"Fighter Pilot", link:"assignment/fighterpilot", category:"Action" },
+  { title:"Flappy Bird", link:"assignment/flapb", category:"Arcade" },
+  { title:"Geometry Freezenova", link:"assignment/gdfreezen", category:"Action" },
+  { title:"Infinite Craft", link:"assignment/infcraft", category:"Puzzle" },
+  { title:"Jetpack Joyride", link:"assignment/jpjyr", category:"Action" },
+  { title:"Mini Golf", link:"assignment/minig", category:"Arcade" },
+  { title:"OvO", link:"assignment/ovo", category:"Arcade" },
+  { title:"OvO 2", link:"assignment/ovo2", category:"Arcade" },
+  { title:"OvO Dimensions", link:"assignment/ovod", category:"Arcade" },
+  { title:"Pokemon Emerald", link:"assignment/pokeem", category:"Action" },
+  { title:"Pokemon Red", link:"assignment/pokemonr", category:"Action" },
+  { title:"Plants vs Zombies", link:"assignment/pvz", category:"Action" },
+  { title:"Super Mario 64", link:"assignment/sm64", category:"Arcade" },
+  { title:"Subway Surfers", link:"assignment/subsurf", category:"Action" },
+  { title:"Super Mario Bros", link:"assignment/supermariobros", category:"Action" },
+  { title:"Temple Run 2", link:"assignment/tr2", category:"Arcade" },
+  { title:"Undertale", link:"assignment/underta", category:"Action" },
+  { title:"Vex 8", link:"assignment/vx8", category:"Action" },
+  { title:"Animal Crossing", link:"assignment/animalc", category:"Action" },
+  { title:"Baldi's Basics", link:"assignment/bb", category:"Action" },
+  { title:"Duck Life 2", link:"assignment/dl2", category:"Action" },
+  { title:"Duck Life 3", link:"assignment/dl3", category:"Action" },
+  { title:"Duck Life 4", link:"assignment/dl4", category:"Action" },
+  { title:"Doge Miner", link:"assignment/dm", category:"Idle" },
+  { title:"FNAF 1", link:"assignment/fnaf1", category:"Action" },
+  { title:"FNAF 2", link:"assignment/fnaf2", category:"Action" },
+  { title:"FNAF 3", link:"assignment/fnaf3", category:"Action" },
+  { title:"FNAF 4", link:"assignment/fnaf4", category:"Action" },
+  { title:"FNAF: Sister Location", link:"assignment/fnaf5", category:"Action" },
+  { title:"Hollow Knight", link:"assignment/hlkn", category:"Action" },
+  { title:"Portal", link:"assignment/portal", category:"Action" },
+  { title:"Uno", link:"assignment/uno", category:"Arcade" },
+  { title:"99 Nights in Forest", link:"assignment/99nitf", category:"Action" },
+  { title:"Blocky Puzzle", link:"assignment/blockypuzzle", category:"Puzzle" },
+  { title:"Bridge Race", link:"assignment/brace", category:"Action" },
+  { title:"CrazyCattle3D", link:"assignment/cc3d", category:"Action" },
+  { title:"Clash Royale", link:"assignment/clro", category:"Action" },
+  { title:"Grow a Garden", link:"assignment/gag", category:"Action" },
+  { title:"Granny", link:"assignment/grny", category:"Action" },
+  { title:"Growden.io", link:"assignment/growio", category:"Action" },
+  { title:"Helix Jump", link:"assignment/hjump", category:"Action" },
+  { title:"Idle Ants", link:"assignment/idants", category:"Action" },
+  { title:"Obby But You're On A Bike", link:"assignment/obyoab", category:"Action" },
+  { title:"Ragdoll Archers", link:"assignment/ragarch", category:"Action" },
+  { title:"Retro Bowl College", link:"assignment/rbc", category:"Arcade" },
+  { title:"Steal a Brainrot", link:"assignment/sab", category:"Action" },
+  { title:"Undertale Yellow", link:"assignment/utyellow", category:"Action" }
+];
+
+const newsData = [
+  {
+    date: "2026-04-24",
+    title: "Oogly Boogly Learning is released!",
+    body: "Oogly Boogly Learning is now live, with 100s of assignments you can easily do online, and for free! Anytime!"
+  },
+];
+
+// ──────────────────────────────────────────────
+// DEFAULTS & CONFIG
+// ──────────────────────────────────────────────
+const DEFAULTS = {
+  accent: '#4ade80',
+  bg: '#0e0e0e',
+  nickname: '',
+  cloakTitle: 'Google Classroom',
+  gameCloakTitle: 'Google Classroom',
+  cloaked: false
+};
+
+const ACCENT_PRESETS = [
+  '#4ade80','#60a5fa','#f87171','#fbbf24','#a78bfa',
+  '#fb923c','#e879f9','#22d3ee','#f472b6','#e2e8f0'
+];
+
+// Category dot colors
+const CAT_COLORS = {
+  Action:  '#f87171',
+  Arcade:  '#60a5fa',
+  Puzzle:  '#fbbf24',
+  Idle:    '#a78bfa',
+  Utility: '#34d399'
+};
+
+let cfg = { ...DEFAULTS };
+let currentCat = 'All';
+let searchQ = '';
+
+// ──────────────────────────────────────────────
+// INIT
+// ──────────────────────────────────────────────
+function init() {
+  loadConfig();
+  applyConfig(false);
+  buildSidebar();
+  renderGrid();
+  renderNews();
+  populateSettingsUI();
+  if (cfg.cloaked) applySiteCloak();
+}
+
+// ──────────────────────────────────────────────
+// CONFIG PERSISTENCE
+// ──────────────────────────────────────────────
+function loadConfig() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('obl_v6_config') || '{}');
+    cfg = { ...DEFAULTS, ...saved };
+  } catch(e) {
+    cfg = { ...DEFAULTS };
+  }
+}
+
+function saveConfig() {
+  localStorage.setItem('obl_v6_config', JSON.stringify(cfg));
+}
+
+// ──────────────────────────────────────────────
+// APPLY CONFIG TO DOM
+// ──────────────────────────────────────────────
+function applyConfig(save = true) {
+  const r = document.documentElement;
+
+  // Accent
+  r.style.setProperty('--accent', cfg.accent);
+  const hex = cfg.accent.replace('#','');
+  const bi = parseInt(hex, 16);
+  r.style.setProperty('--accent-rgb', `${(bi>>16)&255},${(bi>>8)&255},${bi&255}`);
+
+  // Background — derive surface shades
+  r.style.setProperty('--bg', cfg.bg);
+  r.style.setProperty('--surface', lighten(cfg.bg, 8));
+  r.style.setProperty('--surface2', lighten(cfg.bg, 16));
+  r.style.setProperty('--border', lighten(cfg.bg, 26));
+  r.style.setProperty('--card-hover', lighten(cfg.bg, 14));
+
+  // Logo / nickname
+  const logoEl = document.getElementById('logoEl');
+  if (logoEl) {
+    if (cfg.nickname) {
+      logoEl.textContent = cfg.nickname;
+    } else {
+      logoEl.innerHTML = 'Oogly Boogly <span>Learning</span>';
+    }
+  }
+
+  // Cloak button
+  const cb = document.getElementById('cloakBtn');
+  if (cb) cb.classList.toggle('active', cfg.cloaked);
+
+  if (save) saveConfig();
+}
+
+function lighten(hex, amt) {
+  hex = hex.replace('#','');
+  if (hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+  const b = parseInt(hex, 16);
+  const r = Math.min(255, ((b>>16)&255) + amt);
+  const g = Math.min(255, ((b>>8)&255) + amt);
+  const bl = Math.min(255, (b&255) + amt);
+  return '#' + [r,g,bl].map(v=>v.toString(16).padStart(2,'0')).join('');
+}
+
+// ──────────────────────────────────────────────
+// SITE CLOAK
+// ──────────────────────────────────────────────
+const GC_ICON = '/favicon-32x32.png';
+
+function applySiteCloak() {
+  const title = cfg.cloakTitle || 'Google Classroom';
+  document.title = title;
+  document.getElementById('siteIcon').href = GC_ICON;
+}
+
+function removeSiteCloak() {
+  document.title = 'Oogly Boogly Learning';
+  document.getElementById('siteIcon').href = '/favicon-32x32.png';
+}
+
+function toggleCloak() {
+  cfg.cloaked = !cfg.cloaked;
+  saveConfig();
+  document.getElementById('cloakBtn').classList.toggle('active', cfg.cloaked);
+  if (cfg.cloaked) applySiteCloak();
+  else removeSiteCloak();
+  toast(cfg.cloaked ? '🎭 Tab cloaked' : '👁 Cloak removed');
+}
+
+// ──────────────────────────────────────────────
+// GAME LAUNCH — fetch HTML → inject into about:blank
+// ──────────────────────────────────────────────
+async function launchGame(link, title) {
+  // Open blank tab immediately (must be in click handler for popup to be allowed)
+  const gameTab = window.open('about:blank', '_blank');
+  if (!gameTab) {
+    toast('❌ Popup blocked — enable popups for this site');
+    return;
+  }
+
+  const cloakTitle = cfg.gameCloakTitle || 'Google Classroom';
+
+  // Resolve absolute URL
+  let absUrl;
+  if (link.startsWith('http://') || link.startsWith('https://')) {
+    absUrl = link;
+  } else if (link.startsWith('/')) {
+    absUrl = window.location.origin + link;
+  } else {
+    // relative — resolve against current page's directory
+    const base = window.location.href.replace(/\/[^/]*$/, '/');
+    absUrl = base + link;
+  }
+
+  // Determine base URL for asset resolution (the folder the game file lives in)
+  const gameBase = absUrl.endsWith('/') ? absUrl : absUrl.substring(0, absUrl.lastIndexOf('/') + 1);
+
+  // Show a loading screen in the tab
+  writeLoading(gameTab, title, cloakTitle);
+
+  try {
+    const res = await fetch(absUrl, { credentials: 'same-origin' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    let html = await res.text();
+
+    // Inject <base> tag + cloaked title + GC icon right after <head>
+    // Remove any existing <title> first, then inject ours
+    html = html.replace(/<title[^>]*>[\s\S]*?<\/title>/i, '');
+    html = html.replace(
+      /(<head[^>]*>)/i,
+      `$1\n<base href="${gameBase}"/>\n<title>${escHtml(cloakTitle)}</title>\n<link rel="icon" href="${GC_ICON}"/>`
+    );
+    // If no <head> tag existed, prepend manually
+    if (!/<head/i.test(html)) {
+      html = `<head><base href="${gameBase}"/><title>${escHtml(cloakTitle)}</title><link rel="icon" href="${GC_ICON}"/></head>` + html;
+    }
+
+    gameTab.document.open();
+    gameTab.document.write(html);
+    gameTab.document.close();
+
+    // Re-assert title after write (browsers can reset it)
+    setTimeout(() => { try { gameTab.document.title = cloakTitle; } catch(e){} }, 300);
+    setTimeout(() => { try { gameTab.document.title = cloakTitle; } catch(e){} }, 1200);
+
+  } catch(err) {
+    // Fallback: full-screen iframe in about:blank (works when fetch fails for any reason)
+    gameTab.document.open();
+    gameTab.document.write(`<!DOCTYPE html><html>
+<head>
+  <title>${escHtml(cloakTitle)}</title>
+  <link rel="icon" href="${GC_ICON}"/>
+  <style>*{margin:0;padding:0}html,body{width:100%;height:100%;overflow:hidden;background:#000}iframe{width:100%;height:100%;border:none;display:block}</style>
+</head>
+<body>
+  <iframe src="${escHtml(absUrl)}" allowfullscreen allow="fullscreen"></iframe>
+</body></html>`);
+    gameTab.document.close();
+  }
+}
+
+function writeLoading(tab, title, cloakTitle) {
+  tab.document.open();
+  tab.document.write(`<!DOCTYPE html><html>
+<head>
+  <title>${escHtml(cloakTitle)}</title>
+  <link rel="icon" href="${GC_ICON}"/>
+  <style>
+    body{background:#0e0e0e;color:#444;font-family:monospace;font-size:13px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;gap:10px;}
+    .spinner{width:20px;height:20px;border:2px solid #222;border-top-color:#4ade80;border-radius:50%;animation:spin .7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+  <div class="spinner"></div>
+  <div>Loading ${escHtml(title)}…</div>
+</body></html>`);
+  tab.document.close();
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ──────────────────────────────────────────────
+// SIDEBAR
+// ──────────────────────────────────────────────
+function buildSidebar() {
+  const allCats = [...new Set(assignments.map(a => a.category))].sort();
+  const counts = {};
+  assignments.forEach(a => { counts[a.category] = (counts[a.category]||0)+1; });
+
+  const aside = document.getElementById('sidebar');
+  aside.innerHTML = '<div class="sidebar-label">Categories</div>' +
+    ['All', ...allCats].map(c => {
+      const n = c === 'All' ? assignments.length : (counts[c]||0);
+      return `<button class="cat-btn${c===currentCat?' active':''}" onclick="filterCat('${c}')">${c}<span class="cat-count">${n}</span></button>`;
+    }).join('');
+}
+
+// ──────────────────────────────────────────────
+// GAME GRID
+// ──────────────────────────────────────────────
+function renderGrid() {
+  const q = searchQ.toLowerCase();
+  const filtered = assignments.filter(a => {
+    const inCat = currentCat === 'All' || a.category === currentCat;
+    const inSearch = !q || a.title.toLowerCase().includes(q) || a.category.toLowerCase().includes(q);
+    return inCat && inSearch;
+  });
+
+  document.getElementById('sectionTitle').textContent = currentCat === 'All' ? 'All Assignments' : currentCat;
+  document.getElementById('sectionCount').textContent = `${filtered.length} game${filtered.length!==1?'s':''}`;
+
+  const grid = document.getElementById('gameGrid');
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="no-results">No assignments found.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(a => {
+    const dot = CAT_COLORS[a.category] || '#666';
+    const safeLink = a.link.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    const safeTitle = a.title.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return `<div class="card" data-cat="${a.category}" onclick="launchGame('${safeLink}','${safeTitle}')">
+  <div class="card-title">${escHtml(a.title)}</div>
+  <div class="card-cat"><span class="cat-dot" style="background:${dot}"></span>${a.category}</div>
+  <span class="card-arrow">↗</span>
+</div>`;
+  }).join('');
+}
+
+// ──────────────────────────────────────────────
+// NEWS
+// ──────────────────────────────────────────────
+function renderNews() {
+  document.getElementById('newsStrip').innerHTML = newsData.slice(0,2).map(n =>
+    `<div class="news-entry"><span class="news-date">${n.date}</span><span class="news-text">${escHtml(n.title)}</span></div>`
+  ).join('');
+
+  document.getElementById('newsList').innerHTML = newsData.map(n => `
+    <div class="news-item">
+      <div class="news-item-date">${n.date}</div>
+      <div class="news-item-title">${escHtml(n.title)}</div>
+      <div class="news-item-body">${escHtml(n.body)}</div>
+    </div>`).join('');
+}
+
+// ──────────────────────────────────────────────
+// FILTER & SEARCH
+// ──────────────────────────────────────────────
+function filterCat(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().startsWith(cat));
+  });
+  renderGrid();
+}
+
+function onSearch(q) {
+  searchQ = q;
+  renderGrid();
+}
+
+// ──────────────────────────────────────────────
+// MODALS
+// ──────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-bg')) closeModal(e.target.id);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-bg.open').forEach(m => m.classList.remove('open'));
+});
+
+// ──────────────────────────────────────────────
+// SETTINGS UI
+// ──────────────────────────────────────────────
+function populateSettingsUI() {
+  // Swatches
+  const row = document.getElementById('swatchRow');
+  row.innerHTML = ACCENT_PRESETS.map(c =>
+    `<div class="color-swatch${cfg.accent===c?' selected':''}" style="background:${c}" onclick="selectSwatch('${c}')" data-color="${c}" title="${c}"></div>`
+  ).join('');
+  document.getElementById('colorPicker').value = cfg.accent;
+  document.getElementById('bgPicker').value = cfg.bg;
+  document.getElementById('nicknameInput').value = cfg.nickname || '';
+  document.getElementById('cloakTitleInput').value = cfg.cloakTitle || 'Google Classroom';
+  document.getElementById('gameCloakTitleInput').value = cfg.gameCloakTitle || 'Google Classroom';
+}
+
+function selectSwatch(color) {
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.toggle('selected', s.dataset.color===color));
+  document.getElementById('colorPicker').value = color;
+  cfg.accent = color;
+  applyConfig(false);
+}
+
+function previewAccent(val) {
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+  cfg.accent = val;
+  applyConfig(false);
+}
+
+function previewBg(val) {
+  cfg.bg = val;
+  applyConfig(false);
+}
+
+function saveSettings() {
+  cfg.accent = document.getElementById('colorPicker').value;
+  cfg.bg = document.getElementById('bgPicker').value;
+  cfg.nickname = document.getElementById('nicknameInput').value.trim();
+  cfg.cloakTitle = document.getElementById('cloakTitleInput').value.trim() || 'Google Classroom';
+  cfg.gameCloakTitle = document.getElementById('gameCloakTitleInput').value.trim() || 'Google Classroom';
+  applyConfig(true);
+  if (cfg.cloaked) applySiteCloak();
+  closeModal('settingsModal');
+  toast('✅ Settings saved');
+}
+
+function resetSettings() {
+  cfg = { ...DEFAULTS };
+  saveConfig();
+  applyConfig(false);
+  populateSettingsUI();
+  removeSiteCloak();
+  toast('↩ Reset to defaults');
+}
+
+// ──────────────────────────────────────────────
+// TOAST
+// ──────────────────────────────────────────────
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+// ──────────────────────────────────────────────
+// GO
+// ──────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
